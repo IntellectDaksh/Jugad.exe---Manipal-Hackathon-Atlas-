@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CashPulse Commercial Credit & Microfinance Intelligence</title>
+  <meta name="description" content="Institutional credit stress indexing, dynamic facility restructuring, and portfolio risk management.">
+  <link rel="canonical" href="https://cashpulsebank.netlify.app">
+  <meta property="og:title" content="CashPulse Commercial Credit & Microfinance Intelligence">
+  <meta property="og:description" content="Institutional credit stress indexing, dynamic facility restructuring, and portfolio risk management.">
+  <meta property="og:url" content="https://cashpulsebank.netlify.app">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='22 12 18 12 15 21 9 3 6 12 2 12'></polyline></svg>">
+
+  
+  <!-- Tier-1 Bank Typography: Inter + IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./styles.css">
+  <!-- Client-side PDF Report Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a class="brand-badge" id="btn-brand-home">
+          <div class="brand-logo-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">CashPulse Bank</div>
+            <div class="brand-subtitle font-mono" id="sidebar-cluster-tag">Credit Unit · Cluster 04</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Active Branch / Portfolio Switcher -->
+      <div class="sidebar-portfolio-card">
+        <label for="select-portfolio" class="portfolio-label font-mono">Operating Facility / Branch</label>
+        <select id="select-portfolio" class="portfolio-select"></select>
+        <button type="button" class="btn-sidebar-add font-mono" id="btn-open-new-portfolio-modal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Credit Pool
+        </button>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <a class="nav-link active" data-view="pulse" id="nav-pulse">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Credit Facility Ledger
+          <span class="nav-badge font-mono" id="nav-borrowers-count">0</span>
+        </a>
+        <a class="nav-link" data-view="analytics" id="nav-analytics">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Macro Risk & SDG 8
+        </a>
+        <a class="nav-link" data-view="audit" id="nav-audit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Audit & Compliance Log
+        </a>
+      </nav>
+
+      <!-- Bottom Compliance & Cloud Status -->
+      <div class="sidebar-footer">
+        <div class="sync-status-badge" id="btn-open-cloud-sync" style="cursor: pointer;" title="Multi-Device Cloud Sync Configuration">
+          <div class="pulse-dot saved" id="sync-dot"></div>
+          <span id="sync-status-text" class="font-mono">Audit Sync Verified</span>
+          <span class="font-mono" style="margin-left: auto; font-size: 9.5px; color: #60a5fa; background: rgba(37, 99, 235, 0.2); padding: 1px 5px; border-radius: 3px;">Cloud ☁</span>
+        </div>
+        <div class="sidebar-action-buttons font-mono">
+          <button type="button" class="btn-ghost-sm" id="btn-export-json" title="Export regulatory JSON ledger">Export</button>
+          <button type="button" class="btn-ghost-sm" id="btn-import-json" title="Import JSON backup">Import</button>
+          <button type="button" class="btn-ghost-sm" id="btn-sync-cloud-manual" title="Sync now with cloud database">Sync ☁</button>
+          <button type="button" class="btn-ghost-sm" id="btn-reset-demo" title="Restore Mysuru Demonstration Data">Reset</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Top Executive Bar -->
+      <header class="app-topbar">
+        <div class="topbar-titles">
+          <span class="topbar-eyebrow font-mono" id="topbar-region-text">Commercial Division · Cluster 04</span>
+          <h1 class="topbar-heading" id="topbar-title-text">Credit Facility Ledger</h1>
+          <p class="topbar-subheading" id="topbar-desc-text">Dynamic repayment monitoring and cash-flow alignment under UN SDG Goal 8.</p>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn-secondary font-mono" id="btn-top-new-portfolio">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New Pool
+          </button>
+          <button type="button" class="btn-primary font-mono" id="btn-top-add-borrower">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            Underwrite Borrower
+          </button>
+        </div>
+      </header>
+
+      <!-- Layer 1: Portfolio Executive Ledger View -->
+      <section class="page-container" id="view-pulse">
+        <!-- 4 Institutional KPI Cards -->
+        <div class="metric-grid">
+          <!-- KPI 1: Critical Risk -->
+          <div class="metric-card critical" id="kpi-critical-card">
+            <div class="metric-card-header">
+              <span class="metric-tag font-mono">Impaired / High Stress</span>
+              <div class="metric-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+            </div>
+            <div class="metric-val-row">
+              <span class="metric-number font-mono" id="kpi-critical-count">0</span>
+              <span class="metric-unit">Accounts (RSI ≥ 65)</span>
+            </div>
+            <div class="metric-desc">Debt-servicing shortfall imminent within 30 days</div>
+          </div>
+
+          <!-- KPI 2: Watchlist -->
+          <div class="metric-card watch" id="kpi-watch-card">
+            <div class="metric-card-header">
+              <span class="metric-tag font-mono">Watchlist Monitoring</span>
+              <div class="metric-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </div>
+            </div>
+            <div class="metric-val-row">
+              <span class="metric-number font-mono" id="kpi-watch-count">0</span>
+              <span class="metric-unit">Accounts (RSI 40-64)</span>
+            </div>
+            <div class="metric-desc">Restructuring recommended to preserve recovery</div>
+          </div>
+
+          <!-- KPI 3: Stable Capital -->
+          <div class="metric-card stable" id="kpi-stable-card">
+            <div class="metric-card-header">
+              <span class="metric-tag font-mono">Capital Performing</span>
+              <div class="metric-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+            </div>
+            <div class="metric-val-row">
+              <span class="metric-number font-mono" id="kpi-stable-count">0</span>
+              <span class="metric-unit">Accounts (RSI &lt; 40)</span>
+            </div>
+            <div class="metric-desc">Operating income comfortably covers amortization</div>
+          </div>
+
+          <!-- KPI 4: Total Exposure -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-tag font-mono">Total Deployed Exposure</span>
+              <div class="metric-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </div>
+            </div>
+            <div class="metric-val-row">
+              <span class="metric-number font-mono" id="kpi-principal-sum">₹0</span>
+            </div>
+            <div class="metric-desc font-mono" id="kpi-avg-rsi">Avg Stress: 0 RSI</div>
+          </div>
+        </div>
+
+        <!-- Layer 2: Prominent Bank Search & Keyword Discovery Console -->
+        <div class="global-search-container">
+          <div class="search-main-row">
+            <div class="search-input-wrapper">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="search-input" class="search-input font-mono" placeholder="Search accounts, names, trades, seasonal keywords, locations, or notes... (Press '/' to search)">
+              <div class="search-input-controls">
+                <button type="button" class="search-clear-btn font-mono" id="btn-clear-search" title="Clear search query">✕</button>
+                <span class="search-shortcut-badge font-mono">/</span>
+              </div>
+            </div>
+
+            <!-- View Switcher -->
+            <div class="view-mode-toggle" id="view-mode-toggle">
+              <button type="button" class="view-mode-btn active font-mono" data-mode="table" title="Bank Ledger Table View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              </button>
+              <button type="button" class="view-mode-btn font-mono" data-mode="grid" title="Credit Cards Dossier View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="search-controls-row">
+            <div class="search-chips-group" id="search-chips-container">
+              <span class="search-chips-label font-mono">Presets:</span>
+              <button type="button" class="search-chip active" data-keyword="">All Facilities</button>
+              <button type="button" class="search-chip" data-keyword="Vegetable">Vegetable Vendor</button>
+              <button type="button" class="search-chip" data-keyword="Sugarcane">Sugarcane Farmer</button>
+              <button type="button" class="search-chip" data-keyword="Courier">Gig Courier</button>
+              <button type="button" class="search-chip" data-keyword="Kirana">Kirana Retail</button>
+              <button type="button" class="search-chip" data-keyword="Seasonal">Seasonal Dips</button>
+              <button type="button" class="search-chip" data-keyword="Critical">Critical (≥65)</button>
+              <button type="button" class="search-chip" data-keyword="Watch">Watchlist</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="search-feedback-bar font-mono" id="search-feedback-bar">
+                <span id="search-match-count" class="search-match-count">0 Accounts</span>
+              </div>
+              <div class="sort-select-wrapper font-mono">
+                <span>Sort:</span>
+                <select id="sort-select" class="sort-select font-mono">
+                  <option value="risk-desc">Stress Index (Highest)</option>
+                  <option value="risk-asc">Stress Index (Lowest)</option>
+                  <option value="emi-desc">Monthly EMI (Highest)</option>
+                  <option value="name-asc">Borrower Legal Name</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layer 3A: Bank Ledger Table (Primary Mode) -->
+        <div class="ledger-table-wrapper" id="ledger-table-container">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Account ID</th>
+                <th>Borrower & Enterprise</th>
+                <th>Cluster / Location</th>
+                <th>Principal Exposure</th>
+                <th>Monthly Servicing</th>
+                <th>RSI Rating</th>
+                <th>Maturity</th>
+                <th>Status</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Layer 3B: Credit File Cards (Alternative Visual Mode) -->
+        <div class="borrower-grid" id="borrower-cards-container" style="display: none;">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- View 2: Analytics & SDG 8 View -->
+      <section class="page-container" id="view-analytics" style="display: none;">
+        <div class="sdg-banner">
+          <div>
+            <div class="sdg-badge font-mono">UN SDG GOAL 8 · ETHICAL MICROFINANCE</div>
+            <h2 class="sdg-banner-title">Decent Work & Economic Growth</h2>
+            <p class="sdg-banner-desc">
+              Institutional microfinance risk management that protects smallholder livelihoods against structural liquidation during cyclical lean seasons.
+            </p>
+          </div>
+          <div>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5"><path d="M3 3v18h18"></path><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path></svg>
+          </div>
+        </div>
+
+        <div class="deep-dive-grid">
+          <div class="chart-container-box">
+            <div class="chart-header">
+              <h3 class="chart-title">Seasonal Portfolio Risk Heatmap</h3>
+              <span class="font-mono text-muted" style="font-size: 10px;">12-Month Liquidity Exposure</span>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 14px;">
+              Distribution of lean income months across active borrowers in this facility pool.
+            </p>
+            <div id="analytics-heatmap-container"></div>
+          </div>
+
+          <div class="chart-container-box">
+            <div class="chart-header">
+              <h3 class="chart-title">Early Warning Intervention Queue</h3>
+              <span class="badge-risk critical" id="analytics-queue-count">0 pending</span>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
+              Borrowers projected to encounter debt-servicing strain in the next 60 days.
+            </p>
+            <div id="analytics-early-warning-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 3: Audit & Regulatory Log View -->
+      <section class="page-container" id="view-audit" style="display: none;">
+        <div class="chart-container-box">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Compliance & Regulatory Audit Trail</h3>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+                Immutable cryptographic ledger of facility modifications, underwriting notes, and restructuring approvals.
+              </p>
+            </div>
+            <button type="button" class="btn-secondary font-mono" id="btn-clear-audit">Clear Audit History</button>
+          </div>
+          <div class="audit-list" id="audit-list-container"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Layer 4: Borrower Credit Dossier Slide-Over Drawer -->
+  <div class="modal-backdrop" id="modal-borrower-deepdive">
+    <div class="drawer-sheet">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono" id="modal-borrower-eyebrow">Credit Dossier / Account Profile</div>
+          <h2 class="modal-title" id="modal-borrower-name">Borrower Legal Name</h2>
+          <p class="modal-description" id="modal-borrower-sub">Trade Category · Verified Operating Cluster</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn-action-outline font-mono" id="btn-edit-borrower" title="Modify account parameters">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Edit Account
+          </button>
+          <button type="button" class="btn-action-outline font-mono" id="btn-print-facility" title="Print facility summary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Sheet
+          </button>
+          <button type="button" class="btn-action-outline font-mono" id="btn-download-pdf" title="Download official facility PDF report">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download PDF
+          </button>
+          <button type="button" class="modal-close-btn" id="btn-close-deepdive">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- AI Underwriting Committee Notes -->
+        <div class="ai-diagnosis-card">
+          <div class="ai-diagnosis-header">
+            <div class="ai-badge font-mono">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+              Credit Committee Diagnostic Notes
+            </div>
+            <span class="ai-confidence-pill font-mono" id="modal-ai-confidence">92% Precision</span>
+          </div>
+          <p class="ai-reasoning-text" id="modal-ai-reasoning">
+            Evaluating borrower cash flows...
+          </p>
+        </div>
+
+        <!-- 4 Key Ledger Metrics -->
+        <div class="card-stats-row font-mono" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 18px;">
+          <div class="card-stat-item">
+            <span class="card-stat-label">Scheduled Monthly EMI</span>
+            <span class="card-stat-value" id="modal-stat-emi">₹0</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-label">Free Operating Flow</span>
+            <span class="card-stat-value" id="modal-stat-disposable">₹0</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-label">Stress Index (RSI)</span>
+            <span class="card-stat-value" id="modal-stat-rsi">0</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-label">Liquid Reserve Days</span>
+            <span class="card-stat-value" id="modal-stat-buffer">0 days</span>
+          </div>
+        </div>
+
+        <!-- 2 Column: Forward Stress Curve & 4-Factor Drivers -->
+        <div class="deep-dive-grid">
+          <div class="chart-container-box">
+            <div class="chart-header">
+              <h4 class="chart-title">6-Month Forward Stress Projection</h4>
+              <div class="font-mono text-muted" style="font-size: 9.5px;">
+                <span>Red ≥ 65</span> · <span>Amber 40-64</span> · <span>Green &lt; 40</span>
+              </div>
+            </div>
+            <div id="modal-svg-chart-container" style="width: 100%; height: 170px;"></div>
+          </div>
+
+          <div class="chart-container-box">
+            <div class="chart-header">
+              <h4 class="chart-title">Underwriting Stress Drivers</h4>
+              <span class="font-mono text-muted" style="font-size: 9.5px;">Attribution Weight</span>
+            </div>
+            <div id="modal-attribution-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+        </div>
+
+        <!-- Interactive Sensitivity Stress Test (What-If Sandbox) -->
+        <div class="sandbox-card">
+          <div class="sandbox-header">
+            <div class="sandbox-title font-mono">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              Sensitivity Stress Test Sandbox
+            </div>
+            <button type="button" class="btn-ghost-sm font-mono" id="btn-reset-whatif" style="max-width: 90px;">Reset Shock</button>
+          </div>
+          
+          <div class="slider-group font-mono">
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span>Revenue Variance Shock:</span>
+                <span id="label-whatif-income" style="font-weight: 700;">0% change</span>
+              </div>
+              <input type="range" id="slider-whatif-income" class="range-slider" min="-50" max="50" step="5" value="0">
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span>Unplanned Outflow Shock:</span>
+                <span id="label-whatif-expense" style="font-weight: 700;">+₹0 / month</span>
+              </div>
+              <input type="range" id="slider-whatif-expense" class="range-slider" min="0" max="8000" step="500" value="0">
+            </div>
+          </div>
+
+          <div class="sandbox-result-row">
+            <div>
+              <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Simulated Stress Index:</span>
+              <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px;">
+                <span class="font-mono" style="font-size: 18px; font-weight: 700;" id="simulated-rsi-value">--</span>
+                <span class="badge-risk" id="simulated-risk-pill">Stable</span>
+              </div>
+            </div>
+            <div style="text-align: right; max-width: 320px;">
+              <span style="font-size: 11px; color: var(--text-secondary);" id="simulated-status-msg">Baseline configuration active.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layer 5: Facility Restructuring Term Sheets -->
+        <div class="plans-section-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          Restructuring Term Sheet Selection
+        </div>
+        <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
+          Select a verified debt-servicing structure. Executing will immediately generate a legally amended amortization schedule and persist to audit storage.
+        </p>
+        
+        <div class="restructuring-cards-grid" id="modal-restructuring-plans-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: Add Borrower (Clean Bank Form) -->
+  <div class="modal-backdrop" id="modal-add-borrower">
+    <div class="modal-sheet-dialog">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono">Underwriting Facility Intake</div>
+          <h2 class="modal-title">Underwrite Borrower Account</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-add-borrower">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="form-add-borrower" class="form-grid font-mono">
+          <div class="form-group">
+            <label class="form-label" for="add-name">Legal Borrower Name</label>
+            <input type="text" id="add-name" class="form-input" placeholder="e.g. Renuka Gowda" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-occupation">Trade / Activity</label>
+            <input type="text" id="add-occupation" class="form-input" placeholder="e.g. Dairy Milk Producer" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="add-location">Branch / Cluster Location</label>
+            <input type="text" id="add-location" class="form-input" placeholder="e.g. Mandya Outskirts, Karnataka" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-loan-amount">Principal Facility (₹)</label>
+            <input type="number" id="add-loan-amount" class="form-input" placeholder="50000" min="5000" max="300000" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-emi">Scheduled Monthly EMI (₹)</label>
+            <input type="number" id="add-emi" class="form-input" placeholder="4850" min="500" max="30000" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-months">Remaining Maturity (Mos)</label>
+            <input type="number" id="add-months" class="form-input" placeholder="10" min="1" max="48" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-income">Gross Monthly Income (₹)</label>
+            <input type="number" id="add-income" class="form-input" placeholder="19500" min="3000" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-expenses">Essential Outflows (₹)</label>
+            <input type="number" id="add-expenses" class="form-input" placeholder="12500" min="1000" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="add-pattern">Cash-Flow Cadence</label>
+            <select id="add-pattern" class="form-select">
+              <option value="Seasonal">Seasonal (Agricultural / Harvest)</option>
+              <option value="Irregular">Irregular (Gig / Micro-receipts)</option>
+              <option value="Stable">Stable (Consistent Retail)</option>
+              <option value="Declining">Declining (Market Contraction)</option>
+              <option value="Recovering">Recovering (Capital Rebound)</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="add-lean-months">Lean Cyclical Months (comma-separated)</label>
+            <input type="text" id="add-lean-months" class="form-input" placeholder="e.g. Jul, Aug, Sep">
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="add-notes">Underwriting Verification Notes</label>
+            <textarea id="add-notes" class="form-textarea" rows="2" placeholder="e.g. Verified via cooperative passbook. Working capital constrained during monsoon transport delays."></textarea>
+          </div>
+
+          <div class="form-actions full-width">
+            <button type="button" class="btn-secondary" id="btn-cancel-add-borrower">Cancel</button>
+            <button type="submit" class="btn-primary">Approve & Save Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: Edit Borrower Account -->
+  <div class="modal-backdrop" id="modal-edit-borrower">
+    <div class="modal-sheet-dialog">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono">Credit Administration</div>
+          <h2 class="modal-title" id="modal-edit-title">Modify Facility Parameters</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-edit-borrower">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-edit-borrower" class="form-grid font-mono">
+          <input type="hidden" id="edit-borrower-id">
+          <div class="form-group">
+            <label class="form-label" for="edit-name">Legal Borrower Name</label>
+            <input type="text" id="edit-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-occupation">Trade / Activity</label>
+            <input type="text" id="edit-occupation" class="form-input" required>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="edit-location">Cluster / Operating Location</label>
+            <input type="text" id="edit-location" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-loan-amount">Principal Facility (₹)</label>
+            <input type="number" id="edit-loan-amount" class="form-input" min="1000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-emi">Scheduled Monthly EMI (₹)</label>
+            <input type="number" id="edit-emi" class="form-input" min="100" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-months">Remaining Maturity (Mos)</label>
+            <input type="number" id="edit-months" class="form-input" min="1" max="120" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-income">Gross Monthly Income (₹)</label>
+            <input type="number" id="edit-income" class="form-input" min="500" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-expenses">Essential Outflows (₹)</label>
+            <input type="number" id="edit-expenses" class="form-input" min="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-pattern">Cash-Flow Cadence</label>
+            <select id="edit-pattern" class="form-select">
+              <option value="Seasonal">Seasonal (Agri / Harvest Cycle)</option>
+              <option value="Irregular">Irregular (Gig / Micro-receipts)</option>
+              <option value="Stable">Stable (Consistent Retail)</option>
+              <option value="Declining">Declining (Market Contraction)</option>
+              <option value="Recovering">Recovering (Capital Rebound)</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="edit-lean-months">Lean Cyclical Months (comma-separated)</label>
+            <input type="text" id="edit-lean-months" class="form-input" placeholder="e.g. Jul, Aug, Sep">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="edit-notes">Credit Underwriting Notes</label>
+            <textarea id="edit-notes" class="form-textarea" rows="2"></textarea>
+          </div>
+          <div class="form-actions full-width" style="display: flex; justify-content: space-between;">
+            <button type="button" class="btn-danger font-mono" id="btn-delete-borrower">Delete Account</button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-secondary" id="btn-cancel-edit-borrower">Cancel</button>
+              <button type="submit" class="btn-primary">Save Changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: Cloud Sync Configuration -->
+  <div class="modal-backdrop" id="modal-cloud-sync">
+    <div class="modal-sheet-dialog" style="max-width: 520px;">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono">Shared Infrastructure</div>
+          <h2 class="modal-title">Multi-Device Cloud Sync</h2>
+          <p class="modal-description">Synchronizes real-time credit ledgers, restructurings, and audit changes across all laptops and mobile devices.</p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-cloud-sync">✕</button>
+      </div>
+      <div class="modal-body font-mono">
+        <div style="background: var(--slate-50); border: 1px solid var(--border-card); border-radius: var(--radius-xs); padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase;">Cloud Database Status:</span>
+            <span class="badge-risk stable" id="cloud-sync-status-badge">● Active & Connected</span>
+          </div>
+          <div style="font-size: 11.5px; color: var(--slate-900);">
+            Database Key: <strong id="cloud-database-id-display">ff808181a067127101a09aa348a80920</strong>
+          </div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 3px;" id="cloud-last-sync-time">
+            Last Synced: Verified just now
+          </div>
+        </div>
+
+        <div class="form-group full-width" style="margin-bottom: 14px;">
+          <label class="form-label" for="cloud-room-input">Shared Credit Room ID</label>
+          <input type="text" id="cloud-room-input" class="form-input" value="cashpulse_live_cluster_04" placeholder="e.g. team_credit_branch_01">
+          <span style="font-size: 9.5px; color: var(--text-muted); margin-top: 2px;">Anyone using the exact same Room ID will automatically see your changes in real time.</span>
+        </div>
+
+        <div class="form-actions full-width" style="display: flex; justify-content: space-between;">
+          <button type="button" class="btn-secondary" id="btn-copy-share-link">Copy Shared Link 🔗</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-secondary" id="btn-cancel-cloud-sync">Close</button>
+            <button type="button" class="btn-primary" id="btn-force-cloud-sync">Sync Cloud Now ☁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: New Credit Pool / Portfolio -->
+  <div class="modal-backdrop" id="modal-new-portfolio">
+    <div class="modal-sheet-dialog" style="max-width: 480px;">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono">Portfolio Administration</div>
+          <h2 class="modal-title">New Credit Facility Pool</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-new-portfolio">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-new-portfolio" class="form-grid font-mono">
+          <div class="form-group full-width">
+            <label class="form-label" for="port-name">Credit Pool Title</label>
+            <input type="text" id="port-name" class="form-input" placeholder="e.g. Hassan Agri & Coffee Growers" required>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="port-region">Operating Jurisdiction / Cluster</label>
+            <input type="text" id="port-region" class="form-input" placeholder="e.g. Karnataka · Cluster 09" required>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label" for="port-desc">Facility Mandate</label>
+            <textarea id="port-desc" class="form-textarea" rows="3" placeholder="Target borrower demographics, risk tolerance, and underwriting covenants..."></textarea>
+          </div>
+          <div class="form-actions full-width">
+            <button type="button" class="btn-secondary" id="btn-cancel-new-portfolio">Cancel</button>
+            <button type="submit" class="btn-primary">Establish Pool</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: Import JSON Ledger -->
+  <div class="modal-backdrop" id="modal-import-data">
+    <div class="modal-sheet-dialog" style="max-width: 500px;">
+      <div class="modal-sheet-header">
+        <div class="modal-title-group">
+          <div class="modal-eyebrow font-mono">Data Ledger</div>
+          <h2 class="modal-title">Import Credit Database</h2>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-import">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group full-width font-mono">
+          <label class="form-label" for="import-textarea">Paste Exported JSON Data</label>
+          <textarea id="import-textarea" class="form-textarea" rows="8" placeholder="Paste CashPulse JSON ledger here..."></textarea>
+        </div>
+        <div class="form-actions full-width font-mono">
+          <button type="button" class="btn-secondary" id="btn-cancel-import">Cancel</button>
+          <button type="button" class="btn-primary" id="btn-execute-import">Restore Ledger</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
