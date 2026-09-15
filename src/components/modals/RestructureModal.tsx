@@ -9,6 +9,7 @@ import type { Borrower } from '@/types';
 
 interface RestructureModalProps {
   borrower: Borrower | null;
+  planIdx?: number;
   onClose: () => void;
 }
 
@@ -20,10 +21,26 @@ const termOptions = [
   { months: 60, rate: 10.5, label: '60 months · 10.5% APR' },
 ];
 
-export function RestructureModal({ borrower, onClose }: RestructureModalProps) {
+export function RestructureModal({ borrower, planIdx = 1, onClose }: RestructureModalProps) {
   const { restructureBorrower } = useStore();
   const [termIdx, setTermIdx] = useState(2);
   const [reason, setReason] = useState('');
+
+  // Sync term selection with AI recommendation
+  useMemo(() => {
+    if (borrower) {
+      // Map AI plan idx to term idx: A=0(12m), B=1(24m), C=2(36m), D=3(48m)
+      setTermIdx(Math.min(planIdx, 3)); 
+      
+      const reasons = [
+        "Fixed Monthly Amortization: Preserves existing monthly collection cycle without modifying repayment maturity.",
+        "Amortization Linked to Harvest Cycles: Dynamic payment shaping to match seasonal liquidity influx. (AI Recommended)",
+        "Bite-Sized Weekly Micro-Amortization: Disaggregates monthly lumpsum into 4 manageable weekly installments.",
+        "Horizon Extension to Lower Payment: Extends remaining term to slash monthly obligation."
+      ];
+      setReason(reasons[planIdx] || reasons[1]);
+    }
+  }, [borrower, planIdx]);
 
   const newTerms = useMemo(() => {
     if (!borrower) return null;

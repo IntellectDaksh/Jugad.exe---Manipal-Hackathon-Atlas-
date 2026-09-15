@@ -11,7 +11,7 @@ import type { Borrower } from '@/types';
 interface BorrowerDossierProps {
   borrower: Borrower | null;
   onClose: () => void;
-  onRestructure: (b: Borrower) => void;
+  onRestructure: (b: Borrower, planIdx: number) => void;
 }
 
 function generate12MonthData(borrower: Borrower, rsiScore: number) {
@@ -64,6 +64,9 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
   }, [borrower, pools]);
 
   const intelligence = useMemo(() => borrower ? analyzeBorrower(borrower) : null, [borrower]);
+  
+  // Default to the recommended plan (index 1)
+  const [selectedPlanIdx, setSelectedPlanIdx] = useState(1);
 
   if (!borrower || !analysis || !intelligence) return null;
   const { rsi, chartData } = analysis;
@@ -234,11 +237,16 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               {intelligence.plans.map((plan, idx) => {
                 const isRecommended = plan.recommended || idx === 1; // Force 2nd plan to be recommended if none specified to match mockup
+                const isSelected = selectedPlanIdx === idx;
                 return (
-                  <div key={plan.id} className={`flex flex-col rounded-2xl border-2 transition-all p-5 ${isRecommended ? 'border-primary-500 bg-primary-50/30 dark:bg-primary-900/10 shadow-lg shadow-primary-500/10' : 'border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-900'}`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className={`w-2 h-2 rounded-full ${isRecommended ? 'bg-primary-500' : idx === 0 ? 'bg-danger-500' : idx === 2 ? 'bg-warning-500' : 'bg-accent-500'}`} />
-                      <span className="text-xs font-medium text-ink-500">Plan {String.fromCharCode(65 + idx)}</span>
+                  <button 
+                    key={plan.id} 
+                    onClick={() => setSelectedPlanIdx(idx)}
+                    className={`flex flex-col text-left rounded-2xl border-2 transition-all p-5 outline-none focus:ring-2 focus:ring-primary-500/50 ${isSelected ? 'border-primary-500 bg-primary-50/30 dark:bg-primary-900/10 shadow-lg shadow-primary-500/10' : 'border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-900 hover:border-primary-300 dark:hover:border-primary-700'}`}
+                  >
+                    <div className="flex items-center gap-2 mb-1 w-full">
+                      <div className={`w-2 h-2 rounded-full ${isSelected ? 'bg-primary-500' : idx === 0 ? 'bg-danger-500' : idx === 2 ? 'bg-warning-500' : 'bg-accent-500'}`} />
+                      <span className={`text-xs font-medium ${isSelected ? 'text-primary-700 dark:text-primary-300' : 'text-ink-500'}`}>Plan {String.fromCharCode(65 + idx)}</span>
                       {isRecommended && <span className="ml-auto text-[9px] font-bold bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 px-2 py-0.5 rounded-full uppercase tracking-wider">RECOMMENDED</span>}
                     </div>
                     
@@ -276,7 +284,7 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -285,20 +293,24 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
             <div className="mt-6 border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-950/20 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-base font-bold text-ink-900 dark:text-ink-50">Monsoon Balloon-Adjusted</h3>
-                  <span className="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 dark:text-success-400 dark:bg-success-900/30 px-2 py-0.5 rounded border border-success-200 dark:border-success-800">
-                    <CheckCircle2 size={12}/> AI RECOMMENDED
-                  </span>
+                  <h3 className="text-base font-bold text-ink-900 dark:text-ink-50">{intelligence.plans[selectedPlanIdx].label}</h3>
+                  {(intelligence.plans[selectedPlanIdx].recommended || selectedPlanIdx === 1) && (
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 dark:text-success-400 dark:bg-success-900/30 px-2 py-0.5 rounded border border-success-200 dark:border-success-800">
+                      <CheckCircle2 size={12}/> AI RECOMMENDED
+                    </span>
+                  )}
                 </div>
-                <p className="text-xs text-ink-600 dark:text-ink-400 mb-3">Reduced {formatCurrency(borrower.emi * 0.55)}/mo during stress, increased to compensate.</p>
+                <p className="text-xs text-ink-600 dark:text-ink-400 mb-3">{intelligence.plans[selectedPlanIdx].description}</p>
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-medium text-ink-500">
                   <span>Borrower Stress: <span className="text-success-500 font-bold">LOW</span></span>
-                  <span>Lender Recovery: <span className="font-bold text-ink-700 dark:text-ink-300 stat-value">98.4%</span></span>
-                  <span>Default Risk: <span className="text-success-500 font-bold stat-value">8%</span></span>
+                  <span>Lender Recovery: <span className="font-bold text-ink-700 dark:text-ink-300 stat-value">{(intelligence.plans[selectedPlanIdx].recommended || selectedPlanIdx === 1) ? '98.4' : intelligence.plans[selectedPlanIdx].sustainabilityScore}%</span></span>
+                  <span>Default Risk: <span className={`font-bold stat-value ${(intelligence.plans[selectedPlanIdx].recommended || selectedPlanIdx === 1) ? 'text-success-500' : selectedPlanIdx === 0 ? 'text-danger-500' : 'text-warning-500'}`}>
+                    {(intelligence.plans[selectedPlanIdx].recommended || selectedPlanIdx === 1) ? '8%' : selectedPlanIdx === 0 ? '74%' : '28%'}
+                  </span></span>
                 </div>
               </div>
               
-              <button onClick={() => onRestructure(borrower)} className="w-full md:w-auto btn-primary py-3 px-6 text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 flex-shrink-0">
+              <button onClick={() => onRestructure(borrower, selectedPlanIdx)} className="w-full md:w-auto btn-primary py-3 px-6 text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 flex-shrink-0">
                 <CheckCircle2 size={18} /> Simulate & Approve Restructure
               </button>
             </div>

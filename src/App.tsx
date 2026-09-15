@@ -25,6 +25,7 @@ function AppContent() {
   const [poolOpen, setPoolOpen] = useState(false);
   const [dossierBorrower, setDossierBorrower] = useState<Borrower | null>(null);
   const [restructureBorrower, setRestructureBorrower] = useState<Borrower | null>(null);
+  const [restructurePlanIdx, setRestructurePlanIdx] = useState<number>(1);
   const [paymentBorrower, setPaymentBorrower] = useState<Borrower | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -62,12 +63,12 @@ function AppContent() {
         setDossierBorrower(null);
       }
       
-      // Close other modals on back
-      setSearchOpen(false);
-      setPoolOpen(false);
-      setUnderwriteOpen(false);
-      setRestructureBorrower(null);
-      setPaymentBorrower(null);
+      // Close other modals on back if we are navigating backwards
+      if (!state?.restructureId) setRestructureBorrower(null);
+      if (!state?.paymentId) setPaymentBorrower(null);
+      if (!state?.searchOpen) setSearchOpen(false);
+      if (!state?.poolOpen) setPoolOpen(false);
+      if (!state?.underwriteOpen) setUnderwriteOpen(false);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -86,6 +87,17 @@ function AppContent() {
   };
 
   const handleCloseDossier = () => {
+    window.history.back();
+  };
+
+  const handleOpenRestructure = (b: Borrower, planIdx: number) => {
+    window.history.pushState({ view, dossierId: null, restructureId: b.id }, '');
+    setDossierBorrower(null);
+    setRestructureBorrower(b);
+    setRestructurePlanIdx(planIdx);
+  };
+
+  const handleCloseRestructure = () => {
     window.history.back();
   };
 
@@ -141,12 +153,13 @@ function AppContent() {
         <BorrowerDossier
           borrower={dossierBorrower}
           onClose={handleCloseDossier}
-          onRestructure={(b) => { handleCloseDossier(); setRestructureBorrower(b); }}
+          onRestructure={handleOpenRestructure}
         />
       </ErrorBoundary>
       <RestructureModal
         borrower={restructureBorrower}
-        onClose={() => setRestructureBorrower(null)}
+        planIdx={restructurePlanIdx}
+        onClose={handleCloseRestructure}
       />
       <PaymentModal
         borrower={paymentBorrower}
