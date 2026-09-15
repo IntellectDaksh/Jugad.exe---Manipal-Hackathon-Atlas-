@@ -7,7 +7,12 @@
   ![Platform](https://img.shields.io/badge/platform-Web-informational)
   ![License](https://img.shields.io/badge/license-MIT-green)
 
-  **[🔴 View Live Interactive Prototype](https://jugad-exe-manipal-hackathon-atlas-git-main-intellect-daksh.vercel.app/)**
+  ---
+  
+  ## 🚀 [**CLICK HERE TO VIEW LIVE PROTOTYPE**](https://jugad-exe-manipal-hackathon-atlas.vercel.app/) 🚀
+  *(No login required - Production Build)*
+  
+  ---
 </div>
 
 ## Problem & Solution
