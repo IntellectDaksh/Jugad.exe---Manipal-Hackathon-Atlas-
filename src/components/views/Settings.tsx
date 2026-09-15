@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
-import { Download, Upload, RotateCcw, Building2, Trash2, AlertCircle, CheckCircle2, Bell, Save, Key, Shield, Globe, Clock, Smartphone, Mail, Eye, Sun, Moon } from 'lucide-react';
+import { Download, Upload, RotateCcw, Building2, Trash2, AlertCircle, CheckCircle2, Bell, Save, Key, Shield, Globe, Clock, Smartphone, Mail, Eye, Sun, Moon, Banknote, Languages } from 'lucide-react';
 import { useStore } from '@/store';
 import { formatDate } from '@/lib/format';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 type SettingsTab = 'general' | 'appearance' | 'notifications' | 'api' | 'data' | 'danger';
 
@@ -118,20 +119,33 @@ export function Settings() {
               <p className="text-xs text-ink-500 dark:text-ink-400 mt-1">Configure your region and currency.</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-6">
-              <div>
-                <label className="label-text">Base Currency</label>
-                <select value={prefs.currency} onChange={e => setPrefs({...prefs, currency: e.target.value})} className="input-field">
-                  <option value="INR">INR (₹)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="GBP">UK POUND (£)</option>
-                </select>
+              <div className="z-20">
+                <CustomSelect
+                  label="Base Currency"
+                  value={prefs.currency}
+                  onChange={(v) => setPrefs({...prefs, currency: v})}
+                  options={[
+                    { value: 'INR', label: 'INR (₹)', icon: <Banknote size={16} /> },
+                    { value: 'USD', label: 'USD ($)', icon: <Banknote size={16} /> },
+                    { value: 'GBP', label: 'UK POUND (£)', icon: <Banknote size={16} /> },
+                    { value: 'EUR', label: 'EURO (€)', icon: <Banknote size={16} /> },
+                    { value: 'JPY', label: 'YEN (¥)', icon: <Banknote size={16} /> },
+                    { value: 'AUD', label: 'AUD (A$)', icon: <Banknote size={16} /> },
+                    { value: 'CAD', label: 'CAD (C$)', icon: <Banknote size={16} /> },
+                    { value: 'CHF', label: 'FRANC (CHF)', icon: <Banknote size={16} /> },
+                  ]}
+                />
               </div>
-              <div>
-                <label className="label-text">Language</label>
-                <select value={prefs.lang} onChange={e => setPrefs({...prefs, lang: e.target.value})} className="input-field">
-                  <option value="en">English</option>
-                  <option value="hi">Hindi (हिन्दी)</option>
-                </select>
+              <div className="z-10">
+                <CustomSelect
+                  label="Language"
+                  value={prefs.lang}
+                  onChange={(v) => setPrefs({...prefs, lang: v})}
+                  options={[
+                    { value: 'en', label: 'English', icon: <Languages size={16} /> },
+                    { value: 'hi', label: 'Hindi (हिन्दी)', icon: <Languages size={16} /> },
+                  ]}
+                />
               </div>
             </div>
             
