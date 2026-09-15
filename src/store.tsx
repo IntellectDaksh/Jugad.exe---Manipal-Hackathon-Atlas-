@@ -93,6 +93,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       id: generateId('pool'),
       createdAt: new Date().toISOString(),
     };
+    
+    // Auto-migrate accounts that match the jurisdiction or mandate
+    setBorrowers(prev => prev.map(b => {
+      let matches = false;
+      
+      // Match by cluster (jurisdiction)
+      if (p.jurisdiction && p.jurisdiction !== 'All Clusters' && b.cluster.toLowerCase().includes(p.jurisdiction.toLowerCase())) {
+        matches = true;
+      } else if (p.jurisdiction === 'All Clusters') {
+        matches = true;
+      }
+      
+      // Filter by category (mandate) if specified
+      if (matches && p.mandate && p.mandate !== 'Any Category' && !b.tradeCategory.toLowerCase().includes(p.mandate.toLowerCase())) {
+        matches = false;
+      } else if (!p.jurisdiction && p.mandate && p.mandate !== 'Any Category' && b.tradeCategory.toLowerCase().includes(p.mandate.toLowerCase())) {
+         matches = true;
+      }
+
+      if (matches) {
+        return { ...b, poolId: newPool.id };
+      }
+      return b;
+    }));
+
     setPools(prev => [...prev, newPool]);
     addAudit('POOL_CREATE', 'CreditPool', newPool.id, `Created ${newPool.title} — ${newPool.jurisdiction}`);
   }, [addAudit]);

@@ -10,12 +10,12 @@ interface PoolModalProps {
 
 export function PoolModal({ open, onClose }: PoolModalProps) {
   const { addPool } = useStore();
-  const [form, setForm] = useState({ title: '', jurisdiction: '', mandate: '', capacity: 1000000 });
+  const [form, setForm] = useState({ title: '', jurisdiction: '', mandate: '', capacity: 500000 });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     addPool(form);
-    setForm({ title: '', jurisdiction: '', mandate: '', capacity: 1000000 });
+    setForm({ title: '', jurisdiction: '', mandate: '', capacity: 500000 });
     onClose();
   };
 
@@ -42,12 +42,26 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
           <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="input-field" placeholder="e.g. Coastal Trade Finance Pool" required />
         </div>
         <div>
-          <label className="label-text">Jurisdiction / Cluster</label>
-          <input value={form.jurisdiction} onChange={e => setForm({ ...form, jurisdiction: e.target.value })} className="input-field" placeholder="e.g. Mombasa Cluster" required />
+          <label className="label-text">Target Cluster (Auto-Assigns Accounts)</label>
+          <select value={form.jurisdiction} onChange={e => setForm({ ...form, jurisdiction: e.target.value })} className="input-field" required>
+            <option value="">Select a Cluster...</option>
+            <option value="South Mumbai">South Mumbai</option>
+            <option value="Navi Mumbai">Navi Mumbai</option>
+            <option value="Andheri East">Andheri East</option>
+            <option value="Thane">Thane</option>
+            <option value="Dharavi">Dharavi</option>
+            <option value="All Clusters">All Clusters</option>
+          </select>
         </div>
         <div>
-          <label className="label-text">Mandate</label>
-          <textarea value={form.mandate} onChange={e => setForm({ ...form, mandate: e.target.value })} className="input-field min-h-[80px] resize-y" placeholder="Working capital for small-scale traders in coastal East Africa..." />
+          <label className="label-text">Target Category (Optional filter)</label>
+          <select value={form.mandate} onChange={e => setForm({ ...form, mandate: e.target.value })} className="input-field">
+            <option value="">Any Category</option>
+            <option value="Retail">Retail</option>
+            <option value="Agriculture">Agriculture</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Services">Services</option>
+          </select>
         </div>
         <div>
           <label className="label-text">Capital Limit / Capacity (₹)</label>
