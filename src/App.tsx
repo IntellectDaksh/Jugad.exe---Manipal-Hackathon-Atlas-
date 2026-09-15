@@ -12,6 +12,7 @@ import { Settings } from '@/components/views/Settings';
 import { UnderwriteModal } from '@/components/modals/UnderwriteModal';
 import { PoolModal } from '@/components/modals/PoolModal';
 import { BorrowerDossier } from '@/components/modals/BorrowerDossier';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RestructureModal } from '@/components/modals/RestructureModal';
 import { GlobalSearch } from '@/components/modals/GlobalSearch';
 import type { ViewKey, Borrower } from '@/types';
@@ -80,11 +81,13 @@ function AppContent() {
       {/* Modals */}
       <UnderwriteModal open={underwriteOpen} onClose={() => setUnderwriteOpen(false)} />
       <PoolModal open={poolOpen} onClose={() => setPoolOpen(false)} />
-      <BorrowerDossier
-        borrower={dossierBorrower}
-        onClose={() => setDossierBorrower(null)}
-        onRestructure={(b) => { setDossierBorrower(null); setRestructureBorrower(b); }}
-      />
+      <ErrorBoundary>
+        <BorrowerDossier
+          borrower={dossierBorrower}
+          onClose={() => setDossierBorrower(null)}
+          onRestructure={(b) => { setDossierBorrower(null); setRestructureBorrower(b); }}
+        />
+      </ErrorBoundary>
       <RestructureModal
         borrower={restructureBorrower}
         onClose={() => setRestructureBorrower(null)}
