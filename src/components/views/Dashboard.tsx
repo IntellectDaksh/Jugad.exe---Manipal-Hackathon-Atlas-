@@ -161,8 +161,8 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
       </div>
 
       {/* Early warning queue + pool exposure */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-        <div className="xl:col-span-2 card overflow-hidden self-start h-fit">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
+        <div className="xl:col-span-2 card overflow-hidden self-stretch h-full flex flex-col">
           <div className="flex items-center justify-between px-5 py-4 border-b border-ink-200 dark:border-ink-800">
             <div className="flex items-center gap-2.5">
               <AlertTriangle size={18} className="text-danger-500" />
@@ -174,12 +174,12 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
             </button>
           </div>
           {earlyWarnings.length === 0 ? (
-            <div className="px-5 py-12 text-center">
+            <div className="px-5 py-12 text-center flex-1 flex flex-col items-center justify-center">
               <CheckCircle2 size={32} className="mx-auto text-success-500 mb-2" />
               <p className="text-sm text-ink-500 dark:text-ink-400">No borrowers projected to hit strain within 60 days.</p>
             </div>
           ) : (
-            <div className="divide-y divide-ink-100 dark:divide-ink-800">
+            <div className="divide-y divide-ink-100 dark:divide-ink-800 flex-1 overflow-y-auto">
               {earlyWarnings.map(({ borrower, rsi, projection }) => {
                 const strainMonth = projection.find(m => m.projectedRSI >= 65 || m.projectedDSCR < 1.0);
                 return (

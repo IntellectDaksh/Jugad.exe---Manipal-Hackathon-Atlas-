@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FileText, Download, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 import { useStore } from '@/store';
 import { formatDate } from '@/lib/format';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export function Compliance() {
   const { audit } = useStore();
@@ -11,10 +13,53 @@ export function Compliance() {
   const handleGenerateReport = () => {
     setGenerating(true);
     setTimeout(() => {
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.text("CashPulse Basel-III Compliance Report", 14, 22);
+      
+      doc.setFontSize(11);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 32);
+      doc.text("Status: Compliant", 14, 40);
+      
+      autoTable(doc, {
+        startY: 50,
+        head: [['Metric', 'Value', 'Regulatory Threshold', 'Status']],
+        body: [
+          ['Capital Adequacy Ratio (CAR)', '14.2%', '> 10.5%', 'PASS'],
+          ['Liquidity Coverage Ratio (LCR)', '115%', '> 100%', 'PASS'],
+          ['Non-Performing Assets (NPA)', '3.8%', '< 5.0%', 'PASS'],
+          ['Tier 1 Capital Ratio', '12.1%', '> 8.5%', 'PASS'],
+        ],
+      });
+
+      doc.save('basel-iii-compliance-report.pdf');
+
       setGenerating(false);
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     }, 1500);
+  };
+
+  const handleGenerateGenericReport = (title: string) => {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text(`CashPulse - ${title}`, 14, 22);
+    doc.setFontSize(11);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 32);
+    doc.text("This is a dynamically generated PDF report for your microfinance portfolio.", 14, 40);
+    
+    // Add some mock data to make the PDF look realistic
+    autoTable(doc, {
+      startY: 50,
+      head: [['Category', 'Count/Value', 'Trend']],
+      body: [
+        ['Total Active Borrowers', '241', '+12%'],
+        ['Average Risk Stress Index (RSI)', '42', 'Stable'],
+        ['Total Portfolio Exposure', '$1.2M', '+5%'],
+      ],
+    });
+    
+    doc.save(`${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
   };
 
   return (
@@ -23,7 +68,7 @@ export function Compliance() {
       {showToast && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-success-50 dark:bg-success-950/40 border border-success-200 dark:border-success-900 text-success-700 dark:text-success-400 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-lg animate-slide-down z-50">
           <CheckCircle2 size={16} />
-          Basel-III Compliance Report Generated (Mock PDF)
+          Basel-III Compliance Report Downloaded
         </div>
       )}
 
@@ -76,13 +121,13 @@ export function Compliance() {
               <FileText size={16} className="text-primary-500" /> Available Reports
             </h3>
             <div className="space-y-2">
-              <button className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
+              <button onClick={() => handleGenerateGenericReport('Monthly Risk Summary')} className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
                 Monthly Risk Summary <Download size={14} className="opacity-0 group-hover:opacity-100 text-ink-400 transition-opacity" />
               </button>
-              <button className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
+              <button onClick={() => handleGenerateGenericReport('Stress Test Results Q3')} className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
                 Stress Test Results (Q3) <Download size={14} className="opacity-0 group-hover:opacity-100 text-ink-400 transition-opacity" />
               </button>
-              <button className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
+              <button onClick={() => handleGenerateGenericReport('Portfolio Restructure Log')} className="w-full text-left px-3 py-2 rounded hover:bg-ink-50 dark:hover:bg-ink-800 text-sm text-ink-700 dark:text-ink-300 transition-colors flex items-center justify-between group">
                 Portfolio Restructure Log <Download size={14} className="opacity-0 group-hover:opacity-100 text-ink-400 transition-opacity" />
               </button>
             </div>

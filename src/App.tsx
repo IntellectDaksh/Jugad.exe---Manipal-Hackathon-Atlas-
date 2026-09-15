@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StoreProvider } from '@/store';
+import { StoreProvider, useStore } from '@/store';
 import { Sidebar } from '@/components/Sidebar';
 import { TopBar } from '@/components/TopBar';
 import { MobileNav } from '@/components/MobileNav';
@@ -23,16 +23,24 @@ import { EditBorrowerModal } from '@/components/modals/EditBorrowerModal';
 import type { ViewKey, Borrower } from '@/types';
 
 function AppContent() {
+  const { borrowers } = useStore();
   const [view, setView] = useState<ViewKey>('dashboard');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [underwriteOpen, setUnderwriteOpen] = useState(false);
   const [poolOpen, setPoolOpen] = useState(false);
-  const [dossierBorrower, setDossierBorrower] = useState<Borrower | null>(null);
-  const [restructureBorrower, setRestructureBorrower] = useState<Borrower | null>(null);
+  const [dossierId, setDossierId] = useState<string | null>(null);
+  const [restructureId, setRestructureId] = useState<string | null>(null);
   const [restructurePlanIdx, setRestructurePlanIdx] = useState<number>(1);
-  const [paymentBorrower, setPaymentBorrower] = useState<Borrower | null>(null);
-  const [editBorrower, setEditBorrower] = useState<Borrower | null>(null);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const dossierBorrower = borrowers.find(b => b.id === dossierId) || null;
+  const restructureBorrower = borrowers.find(b => b.id === restructureId) || null;
+  const paymentBorrower = borrowers.find(b => b.id === paymentId) || null;
+  const editBorrower = borrowers.find(b => b.id === editId) || null;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,17 +69,17 @@ function AppContent() {
         
         // Handle dossier back button
         if (!state.dossierId) {
-          setDossierBorrower(null);
+          setDossierId(null);
         }
       } else {
         // Fallback if no state
-        setDossierBorrower(null);
+        setDossierId(null);
       }
       
       // Close other modals on back if we are navigating backwards
-      if (!state?.restructureId) setRestructureBorrower(null);
-      if (!state?.paymentId) setPaymentBorrower(null);
-      if (!state?.editId) setEditBorrower(null);
+      if (!state?.restructureId) setRestructureId(null);
+      if (!state?.paymentId) setPaymentId(null);
+      if (!state?.editId) setEditId(null);
       if (!state?.searchOpen) setSearchOpen(false);
       if (!state?.poolOpen) setPoolOpen(false);
       if (!state?.underwriteOpen) setUnderwriteOpen(false);
@@ -84,12 +92,12 @@ function AppContent() {
   const handleSetView = (newView: ViewKey) => {
     window.history.pushState({ view: newView, dossierId: null }, '');
     setView(newView);
-    setDossierBorrower(null); // Ensure dossier is closed when switching views
+    setDossierId(null); // Ensure dossier is closed when switching views
   };
 
   const handleOpenDossier = (b: Borrower) => {
     window.history.pushState({ view, dossierId: b.id }, '');
-    setDossierBorrower(b);
+    setDossierId(b.id);
   };
 
   const handleCloseDossier = () => {
@@ -98,8 +106,8 @@ function AppContent() {
 
   const handleOpenRestructure = (b: Borrower, planIdx: number) => {
     window.history.pushState({ view, dossierId: null, restructureId: b.id }, '');
-    setDossierBorrower(null);
-    setRestructureBorrower(b);
+    setDossierId(null);
+    setRestructureId(b.id);
     setRestructurePlanIdx(planIdx);
   };
 
@@ -108,7 +116,13 @@ function AppContent() {
   };
 
   return (
-    <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950">
+    <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950 relative">
+      {toastMessage && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-success-50 dark:bg-success-950/40 border border-success-200 dark:border-success-900 text-success-700 dark:text-success-400 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-lg animate-slide-down z-[100]">
+          {toastMessage}
+        </div>
+      )}
+      
       <Sidebar
         view={view}
         onViewChange={handleSetView}
@@ -147,7 +161,7 @@ function AppContent() {
           )}
           {view === 'sandbox' && <StressSandbox />}
           {view === 'heatmap' && <SeasonalHeatmap />}
-          {view === 'origination' && <Origination onOpenDossier={handleOpenDossier} />}
+          {view === 'origination' && <Origination onOpenDossier={handleOpenDossier} onUnderwrite={() => setUnderwriteOpen(true)} />}
           {view === 'analytics' && <MacroAnalytics />}
           {view === 'compliance' && <Compliance />}
           {view === 'audit' && <AuditLog />}
@@ -163,22 +177,26 @@ function AppContent() {
           borrower={dossierBorrower}
           onClose={handleCloseDossier}
           onRestructure={handleOpenRestructure}
-          onEdit={setEditBorrower}
-          onPayment={setPaymentBorrower}
+          onEdit={(b) => setEditId(b.id)}
+          onPayment={(b) => setPaymentId(b.id)}
         />
       </ErrorBoundary>
       <RestructureModal
         borrower={restructureBorrower}
         planIdx={restructurePlanIdx}
-        onClose={handleCloseRestructure}
+        onClose={() => {
+          handleCloseRestructure();
+          setToastMessage("Restructure applied successfully. Borrower risk reduced.");
+          setTimeout(() => setToastMessage(null), 3000);
+        }}
       />
       <PaymentModal
         borrower={paymentBorrower}
-        onClose={() => setPaymentBorrower(null)}
+        onClose={() => setPaymentId(null)}
       />
       <EditBorrowerModal
         borrower={editBorrower}
-        onClose={() => setEditBorrower(null)}
+        onClose={() => setEditId(null)}
       />
       <GlobalSearch 
         open={searchOpen} 

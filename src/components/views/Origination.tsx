@@ -6,6 +6,7 @@ import { formatCurrency, formatDate } from '@/lib/format';
 
 interface OriginationProps {
   onOpenDossier?: any;
+  onUnderwrite?: () => void;
 }
 
 const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
@@ -16,7 +17,7 @@ const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
   { id: 'rejected', label: 'Rejected', color: 'border-danger-200 dark:border-danger-900 bg-danger-50 dark:bg-danger-950/30' }
 ];
 
-export function Origination({ onOpenDossier }: OriginationProps) {
+export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
   const { applications, updateApplicationStage } = useStore();
   const [filter, setFilter] = useState('');
 
@@ -43,7 +44,7 @@ export function Origination({ onOpenDossier }: OriginationProps) {
               className="input-field pl-9"
             />
           </div>
-          <button className="btn-primary whitespace-nowrap">
+          <button onClick={onUnderwrite} className="btn-primary whitespace-nowrap">
             <Inbox size={16} /> New Application
           </button>
         </div>
