@@ -37,11 +37,55 @@ function AppContent() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Initialize history state on first load
+  useEffect(() => {
+    window.history.replaceState({ view, dossierId: null }, '');
+    
+    const handlePopState = (e: PopStateEvent) => {
+      const state = e.state;
+      if (state) {
+        if (state.view) setView(state.view);
+        
+        // Handle dossier back button
+        if (!state.dossierId) {
+          setDossierBorrower(null);
+        }
+      } else {
+        // Fallback if no state
+        setDossierBorrower(null);
+      }
+      
+      // Close other modals on back
+      setSearchOpen(false);
+      setPoolOpen(false);
+      setUnderwriteOpen(false);
+      setRestructureBorrower(null);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleSetView = (newView: ViewKey) => {
+    window.history.pushState({ view: newView, dossierId: null }, '');
+    setView(newView);
+    setDossierBorrower(null); // Ensure dossier is closed when switching views
+  };
+
+  const handleOpenDossier = (b: Borrower) => {
+    window.history.pushState({ view, dossierId: b.id }, '');
+    setDossierBorrower(b);
+  };
+
+  const handleCloseDossier = () => {
+    window.history.back();
+  };
+
   return (
     <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950">
       <Sidebar
         view={view}
-        onViewChange={setView}
+        onViewChange={handleSetView}
         onUnderwrite={() => setUnderwriteOpen(true)}
         onNewPool={() => setPoolOpen(true)}
       />
@@ -49,7 +93,7 @@ function AppContent() {
         open={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
         view={view}
-        onViewChange={setView}
+        onViewChange={handleSetView}
         onUnderwrite={() => setUnderwriteOpen(true)}
         onNewPool={() => setPoolOpen(true)}
       />
@@ -65,12 +109,12 @@ function AppContent() {
         <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">
           {view === 'dashboard' && (
             <Dashboard
-              onSelectBorrower={setDossierBorrower}
-              onViewLedger={() => setView('ledger')}
+              onSelectBorrower={handleOpenDossier}
+              onViewLedger={() => handleSetView('ledger')}
             />
           )}
           {view === 'ledger' && (
-            <Ledger onSelectBorrower={setDossierBorrower} />
+            <Ledger onSelectBorrower={handleOpenDossier} />
           )}
           {view === 'sandbox' && <StressSandbox />}
           {view === 'heatmap' && <SeasonalHeatmap />}
@@ -85,8 +129,8 @@ function AppContent() {
       <ErrorBoundary>
         <BorrowerDossier
           borrower={dossierBorrower}
-          onClose={() => setDossierBorrower(null)}
-          onRestructure={(b) => { setDossierBorrower(null); setRestructureBorrower(b); }}
+          onClose={handleCloseDossier}
+          onRestructure={(b) => { handleCloseDossier(); setRestructureBorrower(b); }}
         />
       </ErrorBoundary>
       <RestructureModal
@@ -96,7 +140,10 @@ function AppContent() {
       <GlobalSearch 
         open={searchOpen} 
         onClose={() => setSearchOpen(false)} 
-        onSelectBorrower={(b) => setDossierBorrower(b)} 
+        onSelectBorrower={(b) => {
+          setSearchOpen(false);
+          handleOpenDossier(b);
+        }} 
       />
     </div>
   );
