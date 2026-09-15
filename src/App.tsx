@@ -1,107 +1,60 @@
-import { useState, useEffect } from 'react';
-import { StoreProvider } from '@/store';
-import { Sidebar } from '@/components/Sidebar';
-import { TopBar } from '@/components/TopBar';
-import { MobileNav } from '@/components/MobileNav';
-import { Dashboard } from '@/components/views/Dashboard';
-import { Ledger } from '@/components/views/Ledger';
-import { StressSandbox } from '@/components/views/StressSandbox';
-import { SeasonalHeatmap } from '@/components/views/SeasonalHeatmap';
-import { AuditLog } from '@/components/views/AuditLog';
-import { Settings } from '@/components/views/Settings';
-import { UnderwriteModal } from '@/components/modals/UnderwriteModal';
-import { PoolModal } from '@/components/modals/PoolModal';
-import { BorrowerDossier } from '@/components/modals/BorrowerDossier';
-import { RestructureModal } from '@/components/modals/RestructureModal';
-import { GlobalSearch } from '@/components/modals/GlobalSearch';
-import type { ViewKey, Borrower } from '@/types';
+import { useState } from 'react';
+import Navbar from '@/components/Navbar';
+import PortfolioMonitor from '@/components/views/PortfolioMonitor';
+import BorrowerAnalytics from '@/components/views/BorrowerAnalytics';
+import WhatIfSimulator from '@/components/views/WhatIfSimulator';
+import AuditExplainability from '@/components/views/AuditExplainability';
+import type { ViewKey } from '@/types';
 
-function AppContent() {
-  const [view, setView] = useState<ViewKey>('dashboard');
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [underwriteOpen, setUnderwriteOpen] = useState(false);
-  const [poolOpen, setPoolOpen] = useState(false);
-  const [dossierBorrower, setDossierBorrower] = useState<Borrower | null>(null);
-  const [restructureBorrower, setRestructureBorrower] = useState<Borrower | null>(null);
-  const [searchOpen, setSearchOpen] = useState(false);
+function App() {
+  const [activeView, setActiveView] = useState<ViewKey>('portfolio');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBorrowerId, setSelectedBorrowerId] = useState('b001');
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const handleSelectBorrower = (id: string) => {
+    setSelectedBorrowerId(id);
+    setActiveView('borrower');
+  };
 
   return (
-    <div className="flex min-h-screen bg-ink-50 dark:bg-ink-950">
-      <Sidebar
-        view={view}
-        onViewChange={setView}
-        onUnderwrite={() => setUnderwriteOpen(true)}
-        onNewPool={() => setPoolOpen(true)}
-      />
-      <MobileNav
-        open={mobileNavOpen}
-        onClose={() => setMobileNavOpen(false)}
-        view={view}
-        onViewChange={setView}
-        onUnderwrite={() => setUnderwriteOpen(true)}
-        onNewPool={() => setPoolOpen(true)}
+    <div className="min-h-screen bg-slate-100 text-slate-800">
+      <Navbar
+        activeView={activeView}
+        onViewChange={setActiveView}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <TopBar
-          view={view}
-          onMenuClick={() => setMobileNavOpen(true)}
-          onUnderwrite={() => setUnderwriteOpen(true)}
-          onNewPool={() => setPoolOpen(true)}
-        />
-        <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">
-          {view === 'dashboard' && (
-            <Dashboard
-              onSelectBorrower={setDossierBorrower}
-              onViewLedger={() => setView('ledger')}
-            />
-          )}
-          {view === 'ledger' && (
-            <Ledger onSelectBorrower={setDossierBorrower} />
-          )}
-          {view === 'sandbox' && <StressSandbox />}
-          {view === 'heatmap' && <SeasonalHeatmap />}
-          {view === 'audit' && <AuditLog />}
-          {view === 'settings' && <Settings />}
-        </main>
-      </div>
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {activeView === 'portfolio' && (
+          <PortfolioMonitor
+            searchQuery={searchQuery}
+            onSelectBorrower={handleSelectBorrower}
+          />
+        )}
+        {activeView === 'borrower' && (
+          <BorrowerAnalytics
+            selectedBorrowerId={selectedBorrowerId}
+            onSelectBorrower={setSelectedBorrowerId}
+            onBack={() => setActiveView('portfolio')}
+          />
+        )}
+        {activeView === 'simulator' && (
+          <WhatIfSimulator
+            selectedBorrowerId={selectedBorrowerId}
+            onSelectBorrower={setSelectedBorrowerId}
+          />
+        )}
+        {activeView === 'audit' && <AuditExplainability />}
+      </main>
 
-      {/* Modals */}
-      <UnderwriteModal open={underwriteOpen} onClose={() => setUnderwriteOpen(false)} />
-      <PoolModal open={poolOpen} onClose={() => setPoolOpen(false)} />
-      <BorrowerDossier
-        borrower={dossierBorrower}
-        onClose={() => setDossierBorrower(null)}
-        onRestructure={(b) => { setDossierBorrower(null); setRestructureBorrower(b); }}
-      />
-      <RestructureModal
-        borrower={restructureBorrower}
-        onClose={() => setRestructureBorrower(null)}
-      />
-      <GlobalSearch 
-        open={searchOpen} 
-        onClose={() => setSearchOpen(false)} 
-        onSelectBorrower={(b) => setDossierBorrower(b)} 
-      />
+      <footer className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-5 border-t border-slate-200 mt-6">
+        <p className="text-xs text-slate-400 text-center">
+          CashPulse — AI-Powered Dynamic Microloan Repayment & Cash-Flow Planning System
+        </p>
+      </footer>
     </div>
   );
 }
 
-export default function App() {
-  return (
-    <StoreProvider>
-      <AppContent />
-    </StoreProvider>
-  );
-}
+export default App;
