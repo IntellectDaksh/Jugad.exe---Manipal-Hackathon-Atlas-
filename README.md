@@ -1,15 +1,20 @@
 <div align="center">
-  <img src="public/logo.png" width="96" height="96" alt="CashPulse logo" />
-
   # CashPulse
 
   **Predictive risk intelligence. Proactive interventions — not reactive recoveries.**
 
-  ![Build Status](https://github.com/IntellectDaksh/Jugad.exe---Manipal-Hackathon-Atlas-/actions/workflows/node.js.yml/badge.svg)
-  ![Version](https://img.shields.io/badge/version-1.0.0-blue)
+  ![Version](https://img.shields.io/badge/version-v1-blue)
   ![Platform](https://img.shields.io/badge/platform-Web-informational)
   ![License](https://img.shields.io/badge/license-MIT-green)
 </div>
+
+## Problem & Solution
+
+**The Problem:** Traditional credit scoring models fail in emerging markets due to the lack of formal financial histories. This leaves vulnerable micro-enterprises trapped in default cycles when faced with sudden macroeconomic shocks or seasonal cash flow constraints. Existing legacy banking CRMs are purely reactive, focusing on debt recovery only *after* a default occurs.
+
+**The Solution:** CashPulse bridges this gap by introducing the **Risk Stress Index (RSI)**, a dynamic, multi-factor scoring model that evaluates a borrower's resilience based on high-frequency operational data and seasonal cash flows. CashPulse shifts microfinance from reactive recovery to proactive intervention. It enables institutions to visualize portfolio exposure, stress-test economic shocks, and instantly restructure loans *before* a borrower defaults, ensuring sustainable growth and aligning with UN SDG 8.
+
+---
 
 CashPulse is a specialized risk management platform built for microfinance institutions (MFIs) operating in emerging markets. It moves away from static credit scores by monitoring high-frequency operational data, seasonal cash flows, and macro indicators to create a dynamic **Risk Stress Index (RSI)**.
 
