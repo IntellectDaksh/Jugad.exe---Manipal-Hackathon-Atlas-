@@ -18,6 +18,9 @@ const viewTitles: Record<ViewKey, { title: string; subtitle: string }> = {
   heatmap: { title: 'Seasonal Risk Heatmap', subtitle: '12-month lean income analysis' },
   audit: { title: 'Audit & Compliance Log', subtitle: 'Immutable record of all modifications' },
   settings: { title: 'Settings & Data Management', subtitle: 'Import, export, and pool management' },
+  origination: { title: 'Origination Hub', subtitle: 'Process and review new applications' },
+  analytics: { title: 'Macro Analytics', subtitle: 'Portfolio distribution and risk factors' },
+  compliance: { title: 'Compliance & Reports', subtitle: 'Basel-III reporting and system audit' },
 };
 
 export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool, onSearchClick }: TopBarProps) {

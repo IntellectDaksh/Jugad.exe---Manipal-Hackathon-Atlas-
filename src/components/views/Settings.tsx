@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Download, Upload, RotateCcw, Building2, Trash2, AlertCircle, CheckCircle2, Bell, Save, Key, Shield, Globe, Clock, Smartphone, Mail, Eye } from 'lucide-react';
+import { Download, Upload, RotateCcw, Building2, Trash2, AlertCircle, CheckCircle2, Bell, Save, Key, Shield, Globe, Clock, Smartphone, Mail, Eye, Sun, Moon } from 'lucide-react';
 import { useStore } from '@/store';
 import { formatDate } from '@/lib/format';
 

@@ -104,7 +104,7 @@ export function SeasonalHeatmap() {
               <Tooltip
                 cursor={{ fill: 'transparent' }}
                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fafafa' }}
-                formatter={(value: number) => [formatCurrency(value), 'Income']}
+                formatter={(value: any) => [formatCurrency(value as number), 'Income']}
                 labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
               />
               <Bar dataKey="total" radius={[4, 4, 0, 0]} animationDuration={1000}>

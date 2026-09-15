@@ -38,7 +38,7 @@ export function PaymentModal({ borrower, onClose }: PaymentModalProps) {
 
   if (showSuccess) {
     return (
-      <Modal open={true} onClose={onClose} size="sm">
+      <Modal open={true} onClose={onClose} size="sm" title="Record Payment">
         <div className="py-8 flex flex-col items-center text-center">
           <div className="w-16 h-16 bg-success-100 text-success-600 rounded-full flex items-center justify-center mb-4">
             <CheckSquare size={32} />

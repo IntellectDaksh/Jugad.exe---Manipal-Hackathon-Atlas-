@@ -32,7 +32,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [pools, setPools] = useState<CreditPool[]>(initialPools);
   const [audit, setAudit] = useState<AuditEntry[]>(initialAudit);
   const [applications, setApplications] = useState<OriginationApplication[]>(mockApplications);
-  const [darkMode, setDarkMode] = useState(true); // default to dark mode for premium feel
+  const [darkMode, setDarkMode] = useState(false); // default to light mode
 
   useEffect(() => {
     if (darkMode) document.documentElement.classList.add('dark');

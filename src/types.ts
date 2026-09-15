@@ -25,6 +25,7 @@ export interface Borrower {
   notes: string;
   collateralType?: string;
   collateralValue?: number;
+  structuralTraits?: string[];
 }
 
 export interface RestructureTerms {

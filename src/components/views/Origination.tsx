@@ -5,7 +5,7 @@ import type { OriginationApplication, ApplicationStage } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/format';
 
 interface OriginationProps {
-  onOpenDossier?: (id: string) => void;
+  onOpenDossier?: any;
 }
 
 const STAGES: { id: ApplicationStage; label: string; color: string }[] = [

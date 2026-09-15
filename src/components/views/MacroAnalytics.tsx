@@ -74,7 +74,7 @@ export function MacroAnalytics() {
                 <Tooltip 
                   cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                   contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
-                  formatter={(value: number) => formatCurrency(value, true)}
+                  formatter={(value: any) => formatCurrency(value as number, true)}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
                 <Bar dataKey="performing" name="Performing" stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} />
@@ -109,7 +109,7 @@ export function MacroAnalytics() {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
-                  formatter={(value: number) => formatCurrency(value, true)}
+                  formatter={(value: any) => formatCurrency(value as number, true)}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
               </PieChart>

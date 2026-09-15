@@ -62,7 +62,7 @@ export function PortfolioChart() {
             <Tooltip
               contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fafafa' }}
               itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
-              formatter={(value: number) => [formatCurrency(value), 'Exposure']}
+              formatter={(value: any) => [formatCurrency(value as number), 'Exposure']}
               labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
             />
             <Area
