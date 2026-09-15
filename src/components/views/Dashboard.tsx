@@ -161,61 +161,96 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
       </div>
 
       {/* Early warning queue + pool exposure */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
-        <div className="xl:col-span-2 card overflow-hidden self-stretch h-full flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-ink-200 dark:border-ink-800">
-            <div className="flex items-center gap-2.5">
-              <AlertTriangle size={18} className="text-danger-500" />
-              <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Early Warning Queue</h3>
-              <span className="text-xs text-ink-500 dark:text-ink-400">· projected strain within 60 days</span>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+        <div className="xl:col-span-2 flex flex-col gap-6">
+          <div className="card overflow-hidden h-fit">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-ink-200 dark:border-ink-800">
+              <div className="flex items-center gap-2.5">
+                <AlertTriangle size={18} className="text-danger-500" />
+                <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Early Warning Queue</h3>
+                <span className="text-xs text-ink-500 dark:text-ink-400">· projected strain within 60 days</span>
+              </div>
+              <button onClick={onViewLedger} className="text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
+                View all <ArrowRight size={14} />
+              </button>
             </div>
-            <button onClick={onViewLedger} className="text-xs font-semibold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
-              View all <ArrowRight size={14} />
-            </button>
+            {earlyWarnings.length === 0 ? (
+              <div className="px-5 py-12 text-center">
+                <CheckCircle2 size={32} className="mx-auto text-success-500 mb-2" />
+                <p className="text-sm text-ink-500 dark:text-ink-400">No borrowers projected to hit strain within 60 days.</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-ink-100 dark:divide-ink-800">
+                {earlyWarnings.map(({ borrower, rsi, projection }) => {
+                  const strainMonth = projection.find(m => m.projectedRSI >= 65 || m.projectedDSCR < 1.0);
+                  return (
+                    <button
+                      key={borrower.id}
+                      onClick={() => onSelectBorrower(borrower)}
+                      className="w-full flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-ink-50 dark:hover:bg-ink-800/50 transition-colors text-left"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-lg bg-ink-100 dark:bg-ink-800 flex items-center justify-center flex-shrink-0">
+                          <Users size={16} className="text-ink-500 dark:text-ink-400" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-ink-900 dark:text-ink-100 truncate">{borrower.borrowerName}</p>
+                          <p className="text-xs text-ink-500 dark:text-ink-400 truncate">
+                            {borrower.tradeCategory} · {borrower.cluster}
+                            {strainMonth && <span className="text-danger-600 dark:text-danger-400 font-medium"> · strain in {strainMonth.label}</span>}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div className="text-right">
+                          <p className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">{rsi.score}</p>
+                          <p className="text-[10px] text-ink-500 dark:text-ink-400">RSI</p>
+                        </div>
+                        <RiskBadge tier={rsi.tier} size="sm" />
+                        <ArrowRight size={16} className="text-ink-400" />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          {earlyWarnings.length === 0 ? (
-            <div className="px-5 py-12 text-center flex-1 flex flex-col items-center justify-center">
-              <CheckCircle2 size={32} className="mx-auto text-success-500 mb-2" />
-              <p className="text-sm text-ink-500 dark:text-ink-400">No borrowers projected to hit strain within 60 days.</p>
+
+          <div className="card overflow-hidden">
+            <div className="flex items-center gap-2.5 px-5 py-4 border-b border-ink-200 dark:border-ink-800">
+              <Building2 size={18} className="text-primary-500" />
+              <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Pool Exposure</h3>
             </div>
-          ) : (
-            <div className="divide-y divide-ink-100 dark:divide-ink-800 flex-1 overflow-y-auto">
-              {earlyWarnings.map(({ borrower, rsi, projection }) => {
-                const strainMonth = projection.find(m => m.projectedRSI >= 65 || m.projectedDSCR < 1.0);
-                return (
-                  <button
-                    key={borrower.id}
-                    onClick={() => onSelectBorrower(borrower)}
-                    className="w-full flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-ink-50 dark:hover:bg-ink-800/50 transition-colors text-left"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-9 h-9 rounded-lg bg-ink-100 dark:bg-ink-800 flex items-center justify-center flex-shrink-0">
-                        <Users size={16} className="text-ink-500 dark:text-ink-400" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-ink-900 dark:text-ink-100 truncate">{borrower.borrowerName}</p>
-                        <p className="text-xs text-ink-500 dark:text-ink-400 truncate">
-                          {borrower.tradeCategory} · {borrower.cluster}
-                          {strainMonth && <span className="text-danger-600 dark:text-danger-400 font-medium"> · strain in {strainMonth.label}</span>}
-                        </p>
-                      </div>
+            <div className="divide-y divide-ink-100 dark:divide-ink-800">
+              {poolExposure.map(({ pool, count, exposure, avgRSI }) => (
+                <div key={pool.id} className="px-5 py-3.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-ink-900 dark:text-ink-100 truncate">{pool.title}</p>
+                      <p className="text-xs text-ink-500 dark:text-ink-400">{pool.jurisdiction} · {count} accounts</p>
                     </div>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <div className="text-right">
-                        <p className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">{rsi.score}</p>
-                        <p className="text-[10px] text-ink-500 dark:text-ink-400">RSI</p>
-                      </div>
-                      <RiskBadge tier={rsi.tier} size="sm" />
-                      <ArrowRight size={16} className="text-ink-400" />
-                    </div>
-                  </button>
-                );
-              })}
+                    <RiskBadge tier={avgRSI >= 65 ? 'Critical' : avgRSI >= 40 ? 'Watchlist' : 'Performing'} size="sm" />
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">
+                      {formatCurrency(exposure, true)}
+                      <span className="text-[10px] font-medium text-ink-500 dark:text-ink-400 ml-1">/ {formatCurrency(pool.capacity, true)}</span>
+                    </span>
+                    <span className="text-xs text-ink-500 dark:text-ink-400">avg RSI {avgRSI}</span>
+                  </div>
+                  <div className="mt-2 h-1.5 rounded-full bg-ink-100 dark:bg-ink-800 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${(exposure / (pool.capacity || 1)) >= 0.9 ? 'bg-danger-500' : (exposure / (pool.capacity || 1)) >= 0.75 ? 'bg-warning-500' : 'bg-primary-500'}`}
+                      style={{ width: `${Math.min(100, (exposure / (pool.capacity || 1)) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Right Sidebar: Pool Exposure, Feed & GeoWidget */}
+        {/* Right Sidebar: Feed, GeoWidget, AI Insights */}
         <div className="flex flex-col gap-6">
           {/* Live Activity Feed */}
           <div className="card overflow-hidden">
@@ -254,39 +289,6 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
                   <p className="text-[10px] text-ink-400 mt-0.5">1 hour ago</p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="card overflow-hidden">
-            <div className="flex items-center gap-2.5 px-5 py-4 border-b border-ink-200 dark:border-ink-800">
-              <Building2 size={18} className="text-primary-500" />
-              <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Pool Exposure</h3>
-            </div>
-            <div className="divide-y divide-ink-100 dark:divide-ink-800">
-              {poolExposure.map(({ pool, count, exposure, avgRSI }) => (
-                <div key={pool.id} className="px-5 py-3.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-ink-900 dark:text-ink-100 truncate">{pool.title}</p>
-                      <p className="text-xs text-ink-500 dark:text-ink-400">{pool.jurisdiction} · {count} accounts</p>
-                    </div>
-                    <RiskBadge tier={avgRSI >= 65 ? 'Critical' : avgRSI >= 40 ? 'Watchlist' : 'Performing'} size="sm" />
-                  </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">
-                      {formatCurrency(exposure, true)}
-                      <span className="text-[10px] font-medium text-ink-500 dark:text-ink-400 ml-1">/ {formatCurrency(pool.capacity, true)}</span>
-                    </span>
-                    <span className="text-xs text-ink-500 dark:text-ink-400">avg RSI {avgRSI}</span>
-                  </div>
-                  <div className="mt-2 h-1.5 rounded-full bg-ink-100 dark:bg-ink-800 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${(exposure / (pool.capacity || 1)) >= 0.9 ? 'bg-danger-500' : (exposure / (pool.capacity || 1)) >= 0.75 ? 'bg-warning-500' : 'bg-primary-500'}`}
-                      style={{ width: `${Math.min(100, (exposure / (pool.capacity || 1)) * 100)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
           
