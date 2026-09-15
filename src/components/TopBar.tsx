@@ -30,11 +30,7 @@ export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool }: TopBarPro
           <button onClick={onMenuClick} className="lg:hidden p-2 rounded-lg text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800">
             <Menu size={20} />
           </button>
-          <div className="lg:hidden flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center text-white shadow-md shadow-primary-500/20">
-              <Activity size={18} strokeWidth={2.5} />
-            </div>
-          </div>
+
           <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-bold text-ink-900 dark:text-ink-50 truncate">{info.title}</h2>
             <p className="text-xs text-ink-500 dark:text-ink-400 truncate hidden sm:block">{info.subtitle}</p>

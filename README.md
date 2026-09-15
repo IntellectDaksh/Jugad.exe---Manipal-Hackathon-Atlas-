@@ -1,10 +1,6 @@
 # CashPulse: The Intelligent Microfinance Atlas
 
-<div align="center">
-  <img src="public/logo.jpg" alt="CashPulse Logo" width="200" />
-</div>
 
-<br />
 
 CashPulse is a high-performance, dynamic risk analysis platform tailored for lenders and microfinance institutions. Built by **Team Jugad.exe** for the Manipal Hackathon, it evaluates borrower affordability by reasoning about cash-flow patterns, repayment stress, and structural loan alternatives.
 

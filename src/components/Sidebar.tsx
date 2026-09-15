@@ -24,11 +24,7 @@ export function Sidebar({ view, onViewChange, onUnderwrite, onNewPool }: Sidebar
   return (
     <aside className="hidden lg:flex w-64 flex-shrink-0 flex-col border-r border-ink-200 dark:border-ink-800 bg-white dark:bg-ink-900 h-screen sticky top-0">
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-ink-200 dark:border-ink-800">
-        <div className="relative w-9 h-9 rounded-lg bg-black dark:bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg shadow-black/10 dark:shadow-white/10">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white dark:text-black">
-            <path d="M4 12 L10 12 L12 6 L16 18 L18 12 L22 12" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+
         <div>
           <h1 className="text-base font-bold text-ink-900 dark:text-ink-50 leading-tight tracking-tight">CashPulse</h1>
           <p className="text-[10px] text-ink-500 dark:text-ink-400 font-medium uppercase tracking-widest">Risk Platform</p>
