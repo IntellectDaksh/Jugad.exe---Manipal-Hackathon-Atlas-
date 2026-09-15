@@ -9,6 +9,9 @@ import { StressSandbox } from '@/components/views/StressSandbox';
 import { SeasonalHeatmap } from '@/components/views/SeasonalHeatmap';
 import { AuditLog } from '@/components/views/AuditLog';
 import { Settings } from '@/components/views/Settings';
+import { Origination } from '@/components/views/Origination';
+import { MacroAnalytics } from '@/components/views/MacroAnalytics';
+import { Compliance } from '@/components/views/Compliance';
 import { UnderwriteModal } from '@/components/modals/UnderwriteModal';
 import { PoolModal } from '@/components/modals/PoolModal';
 import { BorrowerDossier } from '@/components/modals/BorrowerDossier';
@@ -141,6 +144,9 @@ function AppContent() {
           )}
           {view === 'sandbox' && <StressSandbox />}
           {view === 'heatmap' && <SeasonalHeatmap />}
+          {view === 'origination' && <Origination onOpenDossier={handleOpenDossier} />}
+          {view === 'analytics' && <MacroAnalytics />}
+          {view === 'compliance' && <Compliance />}
           {view === 'audit' && <AuditLog />}
           {view === 'settings' && <Settings />}
         </main>

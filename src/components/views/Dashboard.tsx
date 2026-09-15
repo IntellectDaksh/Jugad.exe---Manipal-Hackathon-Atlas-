@@ -215,8 +215,48 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
           )}
         </div>
 
-        {/* Right Sidebar: Pool Exposure & GeoWidget */}
+        {/* Right Sidebar: Pool Exposure, Feed & GeoWidget */}
         <div className="flex flex-col gap-6">
+          {/* Live Activity Feed */}
+          <div className="card overflow-hidden">
+            <div className="flex items-center gap-2.5 px-5 py-4 border-b border-ink-200 dark:border-ink-800">
+              <Activity size={18} className="text-primary-500" />
+              <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Live Activity Feed</h3>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-success-100 dark:bg-success-900/30 text-success-600 dark:text-success-400 flex items-center justify-center flex-shrink-0">
+                  <DollarSign size={14} />
+                </div>
+                <div>
+                  <p className="text-sm text-ink-900 dark:text-ink-50 font-medium">Repayment Received</p>
+                  <p className="text-xs text-ink-500 dark:text-ink-400">Omar Said paid ₹4,500</p>
+                  <p className="text-[10px] text-ink-400 mt-0.5">2 mins ago</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck size={14} />
+                </div>
+                <div>
+                  <p className="text-sm text-ink-900 dark:text-ink-50 font-medium">New Origination Approved</p>
+                  <p className="text-xs text-ink-500 dark:text-ink-400">TechHub Repair Centre</p>
+                  <p className="text-[10px] text-ink-400 mt-0.5">15 mins ago</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-warning-100 dark:bg-warning-900/30 text-warning-600 dark:text-warning-400 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle size={14} />
+                </div>
+                <div>
+                  <p className="text-sm text-ink-900 dark:text-ink-50 font-medium">Risk Alert</p>
+                  <p className="text-xs text-ink-500 dark:text-ink-400">Kilimani Auto Spares RSI increased to 68</p>
+                  <p className="text-[10px] text-ink-400 mt-0.5">1 hour ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="card overflow-hidden">
             <div className="flex items-center gap-2.5 px-5 py-4 border-b border-ink-200 dark:border-ink-800">
               <Building2 size={18} className="text-primary-500" />

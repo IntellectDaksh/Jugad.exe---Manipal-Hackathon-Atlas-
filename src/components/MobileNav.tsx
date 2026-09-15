@@ -1,6 +1,5 @@
-import { X, ShieldCheck, Plus, Activity } from 'lucide-react';
+import { X, ShieldCheck, Plus, Activity, LayoutDashboard, TableProperties, FlaskConical, CalendarDays, ScrollText, Settings, Inbox, PieChart, FileText } from 'lucide-react';
 import type { ViewKey } from '@/types';
-import { LayoutDashboard, TableProperties, FlaskConical, CalendarDays, ScrollText, Settings } from 'lucide-react';
 
 interface MobileNavProps {
   open: boolean;
@@ -13,9 +12,12 @@ interface MobileNavProps {
 
 const navItems: { key: ViewKey; label: string; icon: typeof LayoutDashboard }[] = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { key: 'origination', label: 'Origination Hub', icon: Inbox },
   { key: 'ledger', label: 'Credit Ledger', icon: TableProperties },
+  { key: 'analytics', label: 'Macro Analytics', icon: PieChart },
   { key: 'sandbox', label: 'Stress Sandbox', icon: FlaskConical },
   { key: 'heatmap', label: 'Seasonal Heatmap', icon: CalendarDays },
+  { key: 'compliance', label: 'Compliance & Reports', icon: FileText },
   { key: 'audit', label: 'Audit Log', icon: ScrollText },
   { key: 'settings', label: 'Settings', icon: Settings },
 ];

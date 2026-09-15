@@ -1,4 +1,4 @@
-import { LayoutDashboard, TableProperties, FlaskConical, CalendarDays, ScrollText, Settings, Moon, Sun, ShieldCheck, LogOut } from 'lucide-react';
+import { LayoutDashboard, TableProperties, FlaskConical, CalendarDays, ScrollText, Settings, Moon, Sun, ShieldCheck, LogOut, Inbox, PieChart, FileText } from 'lucide-react';
 import type { ViewKey } from '@/types';
 import { useStore } from '@/store';
 
@@ -11,9 +11,12 @@ interface SidebarProps {
 
 const navItems: { key: ViewKey; label: string; icon: typeof LayoutDashboard }[] = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { key: 'origination', label: 'Origination Hub', icon: Inbox },
   { key: 'ledger', label: 'Credit Ledger', icon: TableProperties },
+  { key: 'analytics', label: 'Macro Analytics', icon: PieChart },
   { key: 'sandbox', label: 'Stress Sandbox', icon: FlaskConical },
   { key: 'heatmap', label: 'Seasonal Heatmap', icon: CalendarDays },
+  { key: 'compliance', label: 'Compliance & Reports', icon: FileText },
   { key: 'audit', label: 'Audit Log', icon: ScrollText },
   { key: 'settings', label: 'Settings', icon: Settings },
 ];

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import type { Borrower, CreditPool, AuditEntry } from '@/types';
+import type { Borrower, CreditPool, AuditEntry, OriginationApplication, ApplicationStage } from '@/types';
 import { pools as initialPools, borrowers as initialBorrowers, auditLog as initialAudit } from '@/lib/mockData';
+import { mockApplications } from '@/lib/mockOrigination';
 import { generateId } from '@/lib/format';
 import { defaultSeasonalProfile } from '@/lib/rsi';
 
@@ -8,6 +9,7 @@ interface StoreState {
   borrowers: Borrower[];
   pools: CreditPool[];
   audit: AuditEntry[];
+  applications: OriginationApplication[];
   darkMode: boolean;
   toggleDarkMode: () => void;
   addBorrower: (b: Omit<Borrower, 'id' | 'createdAt' | 'seasonalProfile' | 'restructured' | 'status'>) => void;
@@ -17,6 +19,7 @@ interface StoreState {
   deletePool: (id: string) => void;
   addAudit: (action: string, entity: string, entityId: string, detail: string) => void;
   clearAudit: () => void;
+  updateApplicationStage: (id: string, stage: ApplicationStage) => void;
   importData: (data: { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] }) => void;
   exportData: () => { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] };
   resetData: () => void;
@@ -28,7 +31,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [borrowers, setBorrowers] = useState<Borrower[]>(initialBorrowers);
   const [pools, setPools] = useState<CreditPool[]>(initialPools);
   const [audit, setAudit] = useState<AuditEntry[]>(initialAudit);
-  const [darkMode, setDarkMode] = useState(false);
+  const [applications, setApplications] = useState<OriginationApplication[]>(mockApplications);
+  const [darkMode, setDarkMode] = useState(true); // default to dark mode for premium feel
 
   useEffect(() => {
     if (darkMode) document.documentElement.classList.add('dark');
@@ -98,14 +102,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setBorrowers(prev => prev.map(b => {
       let matches = false;
       
-      // Match by cluster (jurisdiction)
       if (p.jurisdiction && p.jurisdiction !== 'All Clusters' && b.cluster.toLowerCase().includes(p.jurisdiction.toLowerCase())) {
         matches = true;
       } else if (p.jurisdiction === 'All Clusters') {
         matches = true;
       }
       
-      // Filter by category (mandate) if specified
       if (matches && p.mandate && p.mandate !== 'Any Category' && !b.tradeCategory.toLowerCase().includes(p.mandate.toLowerCase())) {
         matches = false;
       } else if (!p.jurisdiction && p.mandate && p.mandate !== 'Any Category' && b.tradeCategory.toLowerCase().includes(p.mandate.toLowerCase())) {
@@ -131,6 +133,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearAudit = useCallback(() => setAudit([]), []);
 
+  const updateApplicationStage = useCallback((id: string, stage: ApplicationStage) => {
+    setApplications(prev => prev.map(a => a.id === id ? { ...a, stage } : a));
+    addAudit('STAGE_UPDATE', 'Application', id, `Moved application to ${stage.replace('_', ' ')}`);
+  }, [addAudit]);
+
   const importData = useCallback((data: { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] }) => {
     setBorrowers(data.borrowers);
     setPools(data.pools);
@@ -144,13 +151,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setBorrowers(initialBorrowers);
     setPools(initialPools);
     setAudit(initialAudit);
+    setApplications(mockApplications);
   }, []);
 
   return (
     <StoreContext.Provider value={{
-      borrowers, pools, audit, darkMode, toggleDarkMode,
+      borrowers, pools, audit, applications, darkMode, toggleDarkMode,
       addBorrower, updateBorrower, restructureBorrower,
       addPool, deletePool, addAudit, clearAudit,
+      updateApplicationStage,
       importData, exportData, resetData,
     }}>
       {children}
@@ -163,3 +172,4 @@ export function useStore(): StoreState {
   if (!ctx) throw new Error('useStore must be used within StoreProvider');
   return ctx;
 }
+

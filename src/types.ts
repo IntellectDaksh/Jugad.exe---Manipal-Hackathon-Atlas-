@@ -80,4 +80,20 @@ export interface ProjectionMonth {
   projectedTier: RiskTier;
 }
 
-export type ViewKey = 'dashboard' | 'ledger' | 'sandbox' | 'heatmap' | 'audit' | 'settings';
+export type ViewKey = 'dashboard' | 'ledger' | 'sandbox' | 'heatmap' | 'audit' | 'settings' | 'origination' | 'analytics' | 'compliance';
+
+export type ApplicationStage = 'pending_data' | 'ai_review' | 'human_review' | 'approved' | 'rejected';
+
+export interface OriginationApplication {
+  id: string;
+  businessName: string;
+  applicantName: string;
+  requestedAmount: number;
+  tradeCategory: string;
+  cluster: string;
+  stage: ApplicationStage;
+  submittedAt: string;
+  aiScore?: number;
+  phoneDataFound: boolean;
+  smsConsent: boolean;
+}
