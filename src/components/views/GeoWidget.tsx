@@ -31,12 +31,7 @@ export function GeoWidget() {
   }, [borrowers]);
 
   return (
-    <motion.div 
-      initial={{ y: 0 }}
-      animate={{ y: [-4, 4, -4] }}
-      transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-      className="card overflow-hidden"
-    >
+    <div className="card overflow-hidden">
       <div className="flex items-center gap-2.5 px-5 py-4 border-b border-ink-200 dark:border-ink-800">
         <MapPin size={18} className="text-primary-500" />
         <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Geographic Distribution</h3>
@@ -71,6 +66,6 @@ export function GeoWidget() {
           <p className="text-xs text-ink-500 text-center">No data available.</p>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
