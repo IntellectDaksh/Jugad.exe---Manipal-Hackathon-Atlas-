@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Download, Upload, RotateCcw, Building2, Trash2, AlertCircle, CheckCircle2, Bell, Save, Key, Shield, Globe, Clock, Smartphone, Mail, Eye, Sun, Moon } from 'lucide-react';
 import { useStore } from '@/store';
 import { formatDate } from '@/lib/format';
@@ -15,6 +15,26 @@ export function Settings() {
   
   const [thresholds, setThresholds] = useState({ criticalRsi: 65, watchlistRsi: 40, reserveDays: 30, dscr: 1.2 });
   const [prefs, setPrefs] = useState({ currency: 'INR', lang: 'en', timeout: 30, emailAlerts: true, smsAlerts: false });
+
+  useEffect(() => {
+    const savedPrefs = localStorage.getItem('cashpulse_prefs');
+    if (savedPrefs) setPrefs(JSON.parse(savedPrefs));
+    const savedThresholds = localStorage.getItem('cashpulse_thresholds');
+    if (savedThresholds) setThresholds(JSON.parse(savedThresholds));
+  }, []);
+
+  const savePrefs = () => {
+    localStorage.setItem('cashpulse_prefs', JSON.stringify(prefs));
+    localStorage.setItem('cashpulse_currency', prefs.currency);
+    showMessage('Preferences saved. Reloading...');
+    setTimeout(() => window.location.reload(), 1000);
+  };
+
+  const saveThresholds = () => {
+    localStorage.setItem('cashpulse_thresholds', JSON.stringify(thresholds));
+    showMessage('Thresholds saved. Reloading...');
+    setTimeout(() => window.location.reload(), 1000);
+  };
 
   const showMessage = (msg: string, type: 'success' | 'error' = 'success') => {
     setMessage({ type, text: msg });
@@ -103,7 +123,7 @@ export function Settings() {
                 <select value={prefs.currency} onChange={e => setPrefs({...prefs, currency: e.target.value})} className="input-field">
                   <option value="INR">INR (₹)</option>
                   <option value="USD">USD ($)</option>
-                  <option value="KES">KES (Sh)</option>
+                  <option value="GBP">UK POUND (£)</option>
                 </select>
               </div>
               <div>
@@ -111,7 +131,6 @@ export function Settings() {
                 <select value={prefs.lang} onChange={e => setPrefs({...prefs, lang: e.target.value})} className="input-field">
                   <option value="en">English</option>
                   <option value="hi">Hindi (हिन्दी)</option>
-                  <option value="sw">Swahili</option>
                 </select>
               </div>
             </div>
@@ -126,7 +145,7 @@ export function Settings() {
                 <input type="number" value={prefs.timeout} onChange={e => setPrefs({...prefs, timeout: parseInt(e.target.value) || 30})} className="input-field max-w-[120px]" />
               </div>
             </div>
-            <button onClick={() => showMessage('General preferences saved')} className="btn-primary"><Save size={16} /> Save Changes</button>
+            <button onClick={savePrefs} className="btn-primary"><Save size={16} /> Save Changes</button>
           </div>
         )}
 
@@ -178,7 +197,7 @@ export function Settings() {
                 <span className="text-sm font-medium text-ink-700 dark:text-ink-300">SMS alerts for Defaults</span>
               </label>
             </div>
-            <button onClick={() => showMessage('Thresholds saved')} className="btn-primary"><Save size={16} /> Save Settings</button>
+            <button onClick={saveThresholds} className="btn-primary"><Save size={16} /> Save Settings</button>
           </div>
         )}
 

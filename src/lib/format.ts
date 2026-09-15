@@ -1,12 +1,25 @@
 export function formatCurrency(n: number, compact = false): string {
+  const currency = localStorage.getItem('cashpulse_currency') || 'INR';
+  
   if (compact) {
-    if (Math.abs(n) >= 1_000_000_0) return `₹${(n / 1_000_000_0).toFixed(1)}Cr`;
-    if (Math.abs(n) >= 1_000_00) return `₹${(n / 1_000_00).toFixed(1)}L`;
-    if (Math.abs(n) >= 1_000) return `₹${(n / 1_000).toFixed(1)}K`;
+    if (currency === 'INR') {
+      if (Math.abs(n) >= 1_000_000_0) return `₹${(n / 1_000_000_0).toFixed(1)}Cr`;
+      if (Math.abs(n) >= 1_000_00) return `₹${(n / 1_000_00).toFixed(1)}L`;
+      if (Math.abs(n) >= 1_000) return `₹${(n / 1_000).toFixed(1)}K`;
+    } else if (currency === 'USD') {
+      if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+      if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
+    } else if (currency === 'GBP') {
+      if (Math.abs(n) >= 1_000_000) return `£${(n / 1_000_000).toFixed(1)}M`;
+      if (Math.abs(n) >= 1_000) return `£${(n / 1_000).toFixed(1)}K`;
+    }
   }
-  return new Intl.NumberFormat('en-IN', {
+
+  const locales: Record<string, string> = { INR: 'en-IN', USD: 'en-US', GBP: 'en-GB' };
+  
+  return new Intl.NumberFormat(locales[currency] || 'en-IN', {
     style: 'currency',
-    currency: 'INR',
+    currency: currency,
     maximumFractionDigits: 0,
   }).format(n);
 }

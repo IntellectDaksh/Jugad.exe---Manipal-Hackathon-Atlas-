@@ -1,8 +1,11 @@
 import type { Borrower, RSIBreakdown, RiskTier, ProjectionMonth, StressShock, CashFlowCadence } from '@/types';
 
 export function getTier(score: number): RiskTier {
-  if (score >= 65) return 'Critical';
-  if (score >= 40) return 'Watchlist';
+  const savedThresholds = localStorage.getItem('cashpulse_thresholds');
+  const thresholds = savedThresholds ? JSON.parse(savedThresholds) : { criticalRsi: 65, watchlistRsi: 40 };
+  
+  if (score >= thresholds.criticalRsi) return 'Critical';
+  if (score >= thresholds.watchlistRsi) return 'Watchlist';
   return 'Performing';
 }
 
@@ -150,10 +153,13 @@ export function projectSixMonths(b: Borrower, shock?: StressShock): ProjectionMo
 }
 
 export function willHitStrain(b: Borrower, shock?: StressShock): boolean {
+  const savedThresholds = localStorage.getItem('cashpulse_thresholds');
+  const thresholds = savedThresholds ? JSON.parse(savedThresholds) : { criticalRsi: 65 };
+
   const projection = projectSixMonths(b, shock);
   const now = new Date();
   const in60Days = projection.slice(0, 2);
-  return in60Days.some(m => m.projectedRSI >= 65 || m.projectedDSCR < 1.0);
+  return in60Days.some(m => m.projectedRSI >= thresholds.criticalRsi || m.projectedDSCR < 1.0);
 }
 
 export function defaultSeasonalProfile(cadence: CashFlowCadence): number[] {
