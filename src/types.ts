@@ -41,6 +41,7 @@ export interface CreditPool {
   title: string;
   jurisdiction: string;
   mandate: string;
+  capacity: number;
   createdAt: string;
 }
 

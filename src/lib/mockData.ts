@@ -8,6 +8,7 @@ const pools: CreditPool[] = [
     title: 'Coastal Trade Finance Pool',
     jurisdiction: 'Mombasa Cluster',
     mandate: 'Working capital for small-scale import/export traders in coastal East Africa',
+    capacity: 250000,
     createdAt: '2025-01-15T08:00:00Z',
   },
   {
@@ -15,6 +16,7 @@ const pools: CreditPool[] = [
     title: 'Highland Agriculture Pool',
     jurisdiction: 'Ethiopian Highlands',
     mandate: 'Seasonal crop financing for smallholder farmer cooperatives',
+    capacity: 150000,
     createdAt: '2025-02-20T08:00:00Z',
   },
   {
@@ -22,6 +24,7 @@ const pools: CreditPool[] = [
     title: 'Urban Micro-Enterprise Pool',
     jurisdiction: 'Nairobi Metro',
     mandate: 'Micro-enterprise growth capital for urban informal sector businesses',
+    capacity: 500000,
     createdAt: '2025-03-10T08:00:00Z',
   },
 ];
@@ -134,6 +137,7 @@ pools.push({
   title: 'Mysuru Field Unit',
   jurisdiction: 'Karnataka · Cluster 04',
   mandate: 'Empirical field portfolio covering seasonal agriculture, street vendor cycles, urban gig workers, and recovering trades.',
+  capacity: 350000,
   createdAt: '2026-09-12T08:00:00.000Z',
 });
 borrowers.push(makeBorrower('Lakshmi', 'Seasonal Vegetable Vendor', 'Mysuru Central Mandi, Karnataka', 'mysuru-demo', 48000, 4760, 11, 18400, 11700, 'seasonal', 2223, 'Watch', 'Income dips during monsoon vegetable supply shortages; surges ahead of festive season.'));
@@ -147,6 +151,7 @@ pools.push({
   title: 'Dharwad Agri & Dairy Cluster',
   jurisdiction: 'Karnataka · Cluster 07',
   mandate: 'Rural micro-enterprise portfolio focusing on dairy farming, pulses, and allied rural production.',
+  capacity: 120000,
   createdAt: '2026-09-13T09:30:00.000Z',
 });
 borrowers.push(makeBorrower('Basavaraj Patil', 'Dairy Cooperative Producer', 'Dharwad Rural, Karnataka', 'dharwad-agri', 50000, 4850, 12, 21500, 13200, 'stable', 3696, 'Active', 'Regular payments via local dairy society direct deposit.'));

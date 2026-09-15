@@ -233,13 +233,16 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
                     <RiskBadge tier={avgRSI >= 65 ? 'Critical' : avgRSI >= 40 ? 'Watchlist' : 'Performing'} size="sm" />
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">{formatCurrency(exposure, true)}</span>
+                    <span className="text-sm font-bold stat-value text-ink-900 dark:text-ink-50">
+                      {formatCurrency(exposure, true)}
+                      <span className="text-[10px] font-medium text-ink-500 dark:text-ink-400 ml-1">/ {formatCurrency(pool.capacity, true)}</span>
+                    </span>
                     <span className="text-xs text-ink-500 dark:text-ink-400">avg RSI {avgRSI}</span>
                   </div>
                   <div className="mt-2 h-1.5 rounded-full bg-ink-100 dark:bg-ink-800 overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${avgRSI >= 65 ? 'bg-danger-500' : avgRSI >= 40 ? 'bg-warning-500' : 'bg-success-500'}`}
-                      style={{ width: `${Math.min(100, avgRSI)}%` }}
+                      className={`h-full rounded-full ${(exposure / (pool.capacity || 1)) >= 0.9 ? 'bg-danger-500' : (exposure / (pool.capacity || 1)) >= 0.75 ? 'bg-warning-500' : 'bg-primary-500'}`}
+                      style={{ width: `${Math.min(100, (exposure / (pool.capacity || 1)) * 100)}%` }}
                     />
                   </div>
                 </div>

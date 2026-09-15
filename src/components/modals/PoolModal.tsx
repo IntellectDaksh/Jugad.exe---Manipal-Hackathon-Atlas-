@@ -10,12 +10,12 @@ interface PoolModalProps {
 
 export function PoolModal({ open, onClose }: PoolModalProps) {
   const { addPool } = useStore();
-  const [form, setForm] = useState({ title: '', jurisdiction: '', mandate: '' });
+  const [form, setForm] = useState({ title: '', jurisdiction: '', mandate: '', capacity: 1000000 });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     addPool(form);
-    setForm({ title: '', jurisdiction: '', mandate: '' });
+    setForm({ title: '', jurisdiction: '', mandate: '', capacity: 1000000 });
     onClose();
   };
 
@@ -48,6 +48,10 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
         <div>
           <label className="label-text">Mandate</label>
           <textarea value={form.mandate} onChange={e => setForm({ ...form, mandate: e.target.value })} className="input-field min-h-[80px] resize-y" placeholder="Working capital for small-scale traders in coastal East Africa..." />
+        </div>
+        <div>
+          <label className="label-text">Capital Limit / Capacity (₹)</label>
+          <input type="number" min="0" value={form.capacity || ''} onChange={e => setForm({ ...form, capacity: parseInt(e.target.value) || 0 })} className="input-field" required />
         </div>
       </form>
     </Modal>
