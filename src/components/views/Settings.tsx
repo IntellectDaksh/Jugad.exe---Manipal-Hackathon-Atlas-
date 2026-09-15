@@ -4,7 +4,7 @@ import { useStore } from '@/store';
 import { formatDate } from '@/lib/format';
 import { CustomSelect } from '@/components/ui/CustomSelect';
 
-type SettingsTab = 'general' | 'appearance' | 'notifications' | 'api' | 'data' | 'danger';
+type SettingsTab = 'general' | 'appearance' | 'notifications' | 'data' | 'danger';
 
 export function Settings() {
   const { borrowers, pools, audit, exportData, importData, resetData, deletePool, darkMode, toggleDarkMode } = useStore();
@@ -81,7 +81,6 @@ export function Settings() {
           { id: 'general', label: 'General', icon: Globe },
           { id: 'appearance', label: 'Appearance', icon: Eye },
           { id: 'notifications', label: 'Alerts & Notifications', icon: Bell },
-          { id: 'api', label: 'API & Webhooks', icon: Key },
           { id: 'data', label: 'Data Management', icon: Save },
           { id: 'danger', label: 'Danger Zone', icon: AlertCircle },
         ].map(tab => {
@@ -215,22 +214,7 @@ export function Settings() {
           </div>
         )}
 
-        {activeTab === 'api' && (
-          <div className="card p-6 space-y-6">
-            <div className="border-b border-ink-100 dark:border-ink-800 pb-4">
-              <h3 className="text-base font-semibold text-ink-900 dark:text-ink-50">API Keys & Webhooks</h3>
-              <p className="text-xs text-ink-500 dark:text-ink-400 mt-1">Manage integration access for third-party systems.</p>
-            </div>
-            <div className="bg-ink-50 dark:bg-ink-800/50 rounded-lg p-4 flex items-center justify-between border border-ink-200 dark:border-ink-700">
-              <div>
-                <p className="text-sm font-bold text-ink-900 dark:text-ink-50">Production Key</p>
-                <p className="text-xs font-mono text-ink-500 mt-1">pk_live_*******************</p>
-              </div>
-              <button onClick={() => showMessage('Key copied to clipboard')} className="btn-secondary text-xs">Copy</button>
-            </div>
-            <button onClick={() => showMessage('New key generated')} className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline">+ Generate New Key</button>
-          </div>
-        )}
+
 
         {activeTab === 'data' && (
           <div className="space-y-6">
