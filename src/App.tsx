@@ -60,6 +60,7 @@ function AppContent() {
           onMenuClick={() => setMobileNavOpen(true)}
           onUnderwrite={() => setUnderwriteOpen(true)}
           onNewPool={() => setPoolOpen(true)}
+          onSearchClick={() => setSearchOpen(true)}
         />
         <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">
           {view === 'dashboard' && (

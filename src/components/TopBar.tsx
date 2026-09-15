@@ -8,6 +8,7 @@ interface TopBarProps {
   onMenuClick: () => void;
   onUnderwrite: () => void;
   onNewPool: () => void;
+  onSearchClick: () => void;
 }
 
 const viewTitles: Record<ViewKey, { title: string; subtitle: string }> = {
@@ -19,7 +20,7 @@ const viewTitles: Record<ViewKey, { title: string; subtitle: string }> = {
   settings: { title: 'Settings & Data Management', subtitle: 'Import, export, and pool management' },
 };
 
-export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool }: TopBarProps) {
+export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool, onSearchClick }: TopBarProps) {
   const { darkMode, toggleDarkMode } = useStore();
   const info = viewTitles[view];
 
@@ -38,6 +39,23 @@ export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool }: TopBarPro
         </div>
 
         <div className="flex items-center gap-2">
+          <div className="hidden md:flex relative max-w-md w-full mr-2">
+            <input 
+              type="text" 
+              placeholder="Search borrowers... (Cmd+K)" 
+              onClick={onSearchClick}
+              readOnly
+              className="w-full bg-ink-100 dark:bg-ink-800/50 border-none rounded-lg pl-10 pr-4 py-2 text-sm text-ink-900 dark:text-ink-50 focus:ring-2 focus:ring-primary-500 cursor-pointer"
+            />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+          </div>
+          
+          <button onClick={onSearchClick} className="md:hidden p-2 rounded-lg text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+
           <TopBarAlerts />
           
           <button onClick={toggleDarkMode} className="p-2 rounded-lg text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors">
