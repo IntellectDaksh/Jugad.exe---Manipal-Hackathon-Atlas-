@@ -156,7 +156,7 @@ function AppContent() {
           {view === 'ledger' && (
             <Ledger 
               onSelectBorrower={handleOpenDossier} 
-              onAddPayment={setPaymentBorrower}
+              onAddPayment={(b) => setPaymentId(b.id)}
             />
           )}
           {view === 'sandbox' && <StressSandbox />}
