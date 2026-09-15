@@ -9,12 +9,13 @@ import type { Borrower, RiskTier } from '@/types';
 
 interface LedgerProps {
   onSelectBorrower: (b: Borrower) => void;
+  onAddPayment: (b: Borrower) => void;
 }
 
 type SortKey = 'borrowerName' | 'rsi' | 'emi' | 'principal' | 'maturity';
 type SortDir = 'asc' | 'desc';
 
-export function Ledger({ onSelectBorrower }: LedgerProps) {
+export function Ledger({ onSelectBorrower, onAddPayment }: LedgerProps) {
   const { borrowers, pools } = useStore();
   const [search, setSearch] = useState('');
   const [tierFilter, setTierFilter] = useState<RiskTier | 'all'>('all');
@@ -137,10 +138,9 @@ export function Ledger({ onSelectBorrower }: LedgerProps) {
     setSelectedIds(newSet);
   };
 
-  const handleAddPayment = (e: React.MouseEvent, name: string) => {
+  const handleAddPayment = (e: React.MouseEvent, borrower: Borrower) => {
     e.stopPropagation();
-    setShowToast(`Payment recorded for ${name}`);
-    setTimeout(() => setShowToast(null), 3000);
+    onAddPayment(borrower);
   };
 
   return (
@@ -312,7 +312,7 @@ export function Ledger({ onSelectBorrower }: LedgerProps) {
                     <td className="px-4 py-3"><StatusBadge status={borrower.status} /></td>
                     <td className="px-4 py-3 text-right">
                       <button 
-                        onClick={(e) => handleAddPayment(e, borrower.borrowerName)}
+                        onClick={(e) => handleAddPayment(e, borrower)}
                         className="p-1.5 text-ink-400 hover:text-success-600 hover:bg-success-50 dark:hover:bg-success-900/30 rounded transition-colors"
                         title="Quick Add Payment"
                       >

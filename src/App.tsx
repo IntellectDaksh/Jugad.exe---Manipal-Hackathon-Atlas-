@@ -15,6 +15,7 @@ import { BorrowerDossier } from '@/components/modals/BorrowerDossier';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RestructureModal } from '@/components/modals/RestructureModal';
 import { GlobalSearch } from '@/components/modals/GlobalSearch';
+import { PaymentModal } from '@/components/modals/PaymentModal';
 import type { ViewKey, Borrower } from '@/types';
 
 function AppContent() {
@@ -24,6 +25,7 @@ function AppContent() {
   const [poolOpen, setPoolOpen] = useState(false);
   const [dossierBorrower, setDossierBorrower] = useState<Borrower | null>(null);
   const [restructureBorrower, setRestructureBorrower] = useState<Borrower | null>(null);
+  const [paymentBorrower, setPaymentBorrower] = useState<Borrower | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ function AppContent() {
       setPoolOpen(false);
       setUnderwriteOpen(false);
       setRestructureBorrower(null);
+      setPaymentBorrower(null);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -114,7 +117,10 @@ function AppContent() {
             />
           )}
           {view === 'ledger' && (
-            <Ledger onSelectBorrower={handleOpenDossier} />
+            <Ledger 
+              onSelectBorrower={handleOpenDossier} 
+              onAddPayment={setPaymentBorrower}
+            />
           )}
           {view === 'sandbox' && <StressSandbox />}
           {view === 'heatmap' && <SeasonalHeatmap />}
@@ -136,6 +142,10 @@ function AppContent() {
       <RestructureModal
         borrower={restructureBorrower}
         onClose={() => setRestructureBorrower(null)}
+      />
+      <PaymentModal
+        borrower={paymentBorrower}
+        onClose={() => setPaymentBorrower(null)}
       />
       <GlobalSearch 
         open={searchOpen} 
