@@ -161,7 +161,7 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
       </div>
 
       {/* Early warning queue + pool exposure */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         <div className="xl:col-span-2 card overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-ink-200 dark:border-ink-800">
             <div className="flex items-center gap-2.5">

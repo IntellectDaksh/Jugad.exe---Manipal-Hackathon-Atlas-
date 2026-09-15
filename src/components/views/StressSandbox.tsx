@@ -89,7 +89,7 @@ export function StressSandbox() {
         <p className="text-sm text-ink-500 dark:text-ink-400 mt-1">Adjust parameters to see real-time impact on stress and recovery</p>
       </div>
 
-      <div className="flex items-center gap-4 mb-8 pb-4 border-b border-ink-200 dark:border-ink-800 overflow-x-auto">
+      <div className="flex items-center gap-4 mb-8 py-4 border-b border-ink-200 dark:border-ink-800 overflow-x-auto">
         <span className="text-xs text-ink-500 uppercase tracking-widest font-semibold mr-2 whitespace-nowrap">Simulating for:</span>
         {borrowers.slice(0, 4).map((b, i) => {
           const colors = ['text-warning-600 bg-warning-50 border-warning-200', 'text-danger-600 bg-danger-50 border-danger-200', 'text-orange-600 bg-orange-50 border-orange-200', 'text-success-600 bg-success-50 border-success-200'];
