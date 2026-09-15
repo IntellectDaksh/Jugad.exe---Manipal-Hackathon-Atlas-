@@ -6,6 +6,8 @@
   ![Version](https://img.shields.io/badge/version-v1-blue)
   ![Platform](https://img.shields.io/badge/platform-Web-informational)
   ![License](https://img.shields.io/badge/license-MIT-green)
+
+  **[🔴 View Live Interactive Prototype](https://jugad-exe-manipal-hackathon-atlas-git-main-intellect-daksh.vercel.app/)**
 </div>
 
 ## Problem & Solution
