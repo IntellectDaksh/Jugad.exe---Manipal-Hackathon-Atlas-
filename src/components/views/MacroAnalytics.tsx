@@ -32,7 +32,16 @@ export function MacroAnalytics() {
     borrowers.forEach(b => {
       map.set(b.tradeCategory, (map.get(b.tradeCategory) || 0) + b.principal);
     });
-    return Array.from(map.entries()).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+    const sorted = Array.from(map.entries()).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+    
+    // Group into top 5 and "Other" to prevent legend overflow
+    if (sorted.length > 5) {
+      const top5 = sorted.slice(0, 5);
+      const otherValue = sorted.slice(5).reduce((acc, curr) => acc + curr.value, 0);
+      top5.push({ name: 'Other Sectors', value: otherValue });
+      return top5;
+    }
+    return sorted;
   }, [borrowers]);
 
   // Mock trend data
@@ -95,7 +104,7 @@ export function MacroAnalytics() {
               <PieChart>
                 <Pie
                   data={categoryData}
-                  cx="50%"
+                  cx="40%"
                   cy="50%"
                   innerRadius={80}
                   outerRadius={110}
@@ -111,7 +120,7 @@ export function MacroAnalytics() {
                   contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
                   formatter={(value: any) => formatCurrency(value as number, true)}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
+                <Legend layout="vertical" verticalAlign="middle" align="right" iconType="circle" wrapperStyle={{ fontSize: '12px', width: '45%' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
