@@ -3,6 +3,7 @@ import { Plus, CheckSquare } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { formatCurrency } from '@/lib/format';
 import type { Borrower } from '@/types';
+import { useStore } from '@/store';
 
 interface PaymentModalProps {
   borrower: Borrower | null;
@@ -10,6 +11,7 @@ interface PaymentModalProps {
 }
 
 export function PaymentModal({ borrower, onClose }: PaymentModalProps) {
+  const { recordPayment } = useStore();
   const [amount, setAmount] = useState<number | ''>('');
   const [method, setMethod] = useState('Bank Transfer');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -20,10 +22,12 @@ export function PaymentModal({ borrower, onClose }: PaymentModalProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!amount) return;
     setIsSubmitting(true);
     
-    // Fake API call
+    // Simulate API call delay for UX
     setTimeout(() => {
+      recordPayment(borrower.id, Number(amount), method);
       setIsSubmitting(false);
       setShowSuccess(true);
       

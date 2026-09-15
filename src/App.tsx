@@ -19,6 +19,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RestructureModal } from '@/components/modals/RestructureModal';
 import { GlobalSearch } from '@/components/modals/GlobalSearch';
 import { PaymentModal } from '@/components/modals/PaymentModal';
+import { EditBorrowerModal } from '@/components/modals/EditBorrowerModal';
 import type { ViewKey, Borrower } from '@/types';
 
 function AppContent() {
@@ -30,6 +31,7 @@ function AppContent() {
   const [restructureBorrower, setRestructureBorrower] = useState<Borrower | null>(null);
   const [restructurePlanIdx, setRestructurePlanIdx] = useState<number>(1);
   const [paymentBorrower, setPaymentBorrower] = useState<Borrower | null>(null);
+  const [editBorrower, setEditBorrower] = useState<Borrower | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -69,6 +71,7 @@ function AppContent() {
       // Close other modals on back if we are navigating backwards
       if (!state?.restructureId) setRestructureBorrower(null);
       if (!state?.paymentId) setPaymentBorrower(null);
+      if (!state?.editId) setEditBorrower(null);
       if (!state?.searchOpen) setSearchOpen(false);
       if (!state?.poolOpen) setPoolOpen(false);
       if (!state?.underwriteOpen) setUnderwriteOpen(false);
@@ -160,6 +163,8 @@ function AppContent() {
           borrower={dossierBorrower}
           onClose={handleCloseDossier}
           onRestructure={handleOpenRestructure}
+          onEdit={setEditBorrower}
+          onPayment={setPaymentBorrower}
         />
       </ErrorBoundary>
       <RestructureModal
@@ -170,6 +175,10 @@ function AppContent() {
       <PaymentModal
         borrower={paymentBorrower}
         onClose={() => setPaymentBorrower(null)}
+      />
+      <EditBorrowerModal
+        borrower={editBorrower}
+        onClose={() => setEditBorrower(null)}
       />
       <GlobalSearch 
         open={searchOpen} 

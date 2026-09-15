@@ -20,6 +20,7 @@ interface StoreState {
   addAudit: (action: string, entity: string, entityId: string, detail: string) => void;
   clearAudit: () => void;
   updateApplicationStage: (id: string, stage: ApplicationStage) => void;
+  recordPayment: (id: string, amount: number, method: string) => void;
   importData: (data: { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] }) => void;
   exportData: () => { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] };
   resetData: () => void;
@@ -138,6 +139,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addAudit('STAGE_UPDATE', 'Application', id, `Moved application to ${stage.replace('_', ' ')}`);
   }, [addAudit]);
 
+  const recordPayment = useCallback((id: string, amount: number, method: string) => {
+    setBorrowers(prev => prev.map(b => {
+      if (b.id !== id) return b;
+      const newPrincipal = Math.max(0, b.principal - amount);
+      const isPaidOff = newPrincipal === 0;
+      return {
+        ...b,
+        principal: newPrincipal,
+        status: isPaidOff ? 'Closed' : b.status,
+      };
+    }));
+    const b = borrowers.find(x => x.id === id);
+    if (b) {
+      addAudit('PAYMENT', 'Borrower', id, `Recorded ${method} payment of $${amount.toLocaleString()} for ${b.borrowerName}. Remaining: $${Math.max(0, b.principal - amount).toLocaleString()}`);
+    }
+  }, [borrowers, addAudit]);
+
   const importData = useCallback((data: { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] }) => {
     setBorrowers(data.borrowers);
     setPools(data.pools);
@@ -159,7 +177,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       borrowers, pools, audit, applications, darkMode, toggleDarkMode,
       addBorrower, updateBorrower, restructureBorrower,
       addPool, deletePool, addAudit, clearAudit,
-      updateApplicationStage,
+      updateApplicationStage, recordPayment,
       importData, exportData, resetData,
     }}>
       {children}

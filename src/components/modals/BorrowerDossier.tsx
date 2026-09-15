@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, Lightbulb, Zap, CheckCircle2, TrendingUp, Clock, CalendarDays, Wallet } from 'lucide-react';
+import { ArrowLeft, Lightbulb, Zap, CheckCircle2, TrendingUp, Clock, CalendarDays, Wallet, Settings2, Banknote } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, ComposedChart } from 'recharts';
 
 import { useStore } from '@/store';
@@ -12,6 +12,8 @@ interface BorrowerDossierProps {
   borrower: Borrower | null;
   onClose: () => void;
   onRestructure: (b: Borrower, planIdx: number) => void;
+  onEdit: (b: Borrower) => void;
+  onPayment: (b: Borrower) => void;
 }
 
 function generate12MonthData(borrower: Borrower, rsiScore: number) {
@@ -52,7 +54,7 @@ function getInitials(name: string) {
   return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
-export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDossierProps) {
+export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPayment }: BorrowerDossierProps) {
   const { pools } = useStore();
 
   const analysis = useMemo(() => {
@@ -76,24 +78,34 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
       <div className="max-w-[1600px] mx-auto min-h-screen flex flex-col pb-12">
         {/* Header */}
         <header className="sticky top-0 z-10 bg-ink-50/90 dark:bg-ink-950/90 backdrop-blur-md px-6 py-4 flex items-center justify-between border-b border-ink-200 dark:border-ink-800">
-          <button 
-            onClick={onClose}
-            className="flex items-center gap-2 text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-ink-50 transition-colors font-medium text-sm"
-          >
-            <ArrowLeft size={16} />
-            Back to Portfolio
-          </button>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-ink-500 font-medium uppercase tracking-wider">Persona:</span>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-warning-50 dark:bg-warning-900/30 border border-warning-200 dark:border-warning-800">
-              <div className="w-5 h-5 rounded-full bg-warning-500 text-white flex items-center justify-center text-[9px] font-bold">
-                {getInitials(borrower.borrowerName)}
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={onClose}
+              className="flex items-center gap-2 text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-ink-50 transition-colors font-medium text-sm"
+            >
+              <ArrowLeft size={16} />
+              Back to Portfolio
+            </button>
+            <div className="hidden sm:flex items-center gap-3 border-l border-ink-200 dark:border-ink-800 pl-6">
+              <span className="text-xs text-ink-500 font-medium uppercase tracking-wider">Persona:</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-warning-50 dark:bg-warning-900/30 border border-warning-200 dark:border-warning-800">
+                <div className="w-5 h-5 rounded-full bg-warning-500 text-white flex items-center justify-center text-[9px] font-bold">
+                  {getInitials(borrower.borrowerName)}
+                </div>
+                <span className="text-sm font-semibold text-warning-900 dark:text-warning-100">{borrower.borrowerName.split(' ')[0]}</span>
+                <span className="text-xs text-warning-700 dark:text-warning-300 bg-warning-100 dark:bg-warning-900/50 px-2 py-0.5 rounded-full">
+                  {borrower.structuralTraits?.[0] || 'Irregular'}
+                </span>
               </div>
-              <span className="text-sm font-semibold text-warning-900 dark:text-warning-100">{borrower.borrowerName.split(' ')[0]}</span>
-              <span className="text-xs text-warning-700 dark:text-warning-300 bg-warning-100 dark:bg-warning-900/50 px-2 py-0.5 rounded-full">
-                {borrower.structuralTraits?.[0] || 'Irregular'}
-              </span>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => onEdit(borrower)} className="btn-secondary text-xs px-3 py-1.5 hidden sm:flex">
+              <Settings2 size={14} /> Edit Details
+            </button>
+            <button onClick={() => onPayment(borrower)} className="btn-primary text-xs px-3 py-1.5 hidden sm:flex bg-success-600 hover:bg-success-700 border-success-700 shadow-success-600/20">
+              <Banknote size={14} /> Record Payment
+            </button>
           </div>
         </header>
 
