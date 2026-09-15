@@ -39,6 +39,11 @@ function AppContent() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Scroll to top when view changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [view]);
+
   // Initialize history state on first load
   useEffect(() => {
     window.history.replaceState({ view, dossierId: null }, '');
