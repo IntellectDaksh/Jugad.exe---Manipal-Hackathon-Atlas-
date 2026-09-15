@@ -116,7 +116,7 @@ export function StressSandbox() {
               <input
                 type="range"
                 min={-50}
-                max={20}
+                max={50}
                 step={5}
                 value={revenueVar}
                 onChange={e => setRevenueVar(Number(e.target.value))}
@@ -125,7 +125,7 @@ export function StressSandbox() {
               <div className="flex justify-between text-[10px] text-ink-400 mt-1">
                 <span>−50%</span>
                 <span>0%</span>
-                <span>+20%</span>
+                <span>+50%</span>
               </div>
             </div>
 

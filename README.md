@@ -22,22 +22,6 @@ Lenders need to understand not only whether a borrower is likely to repay, but *
 
 ---
 
-## 📸 Screenshots
-
-### 1. The Portfolio Dashboard
-An overview of total deployed exposure, AI-generated risk insights, and interactive global heatmaps displaying geographical risk.
-<div align="center">
-  <img src="public/dashboard.png" alt="CashPulse Dashboard" width="800" />
-</div>
-
-### 2. The Credit Ledger & Dossier
-Advanced multi-tier filtering for the entire borrower pool, along with deep-dive dossier charts tracking the Risk Stress Index (RSI) over time.
-<div align="center">
-  <img src="public/ledger.png" alt="CashPulse Credit Ledger" width="800" />
-</div>
-
----
-
 ## ✨ Core Features
 
 - **Dynamic Risk Heatmap**: Calendar visualizing projected income fluctuations indicating potential repayment stress.

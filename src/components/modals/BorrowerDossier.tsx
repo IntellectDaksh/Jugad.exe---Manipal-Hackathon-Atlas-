@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { User, Building2, MapPin, DollarSign, Calendar, TrendingUp, TrendingDown, Wallet, FileText, RotateCcw, AlertCircle, Download, MessageSquare, Phone, Mail, Activity, History, ShieldCheck } from 'lucide-react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, LineChart, Line, YAxis, CartesianGrid } from 'recharts';
-import html2pdf from 'html2pdf.js';
+
 import { Modal } from '@/components/ui/Modal';
 import { RiskBadge, StatusBadge } from '@/components/ui/RiskBadge';
 import { useStore } from '@/store';
@@ -106,14 +106,17 @@ export function BorrowerDossier({ borrower, onClose, onRestructure }: BorrowerDo
           <button onClick={() => {
             const element = document.getElementById('dossier-content');
             if (element) {
-              const opt: any = {
-                margin: 0.5,
-                filename: `${borrower.borrowerName.replace(/\s+/g, '_')}_Dossier.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-              };
-              html2pdf().set(opt).from(element).save();
+              import('html2pdf.js').then((module) => {
+                const html2pdf = module.default || (module as any);
+                const opt: any = {
+                  margin: 0.5,
+                  filename: `${borrower.borrowerName.replace(/\s+/g, '_')}_Dossier.pdf`,
+                  image: { type: 'jpeg', quality: 0.98 },
+                  html2canvas: { scale: 2, useCORS: true },
+                  jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save();
+              }).catch(err => console.error('Failed to load html2pdf', err));
             }
           }} className="btn-secondary flex items-center gap-2">
             <Download size={16} /> Export PDF
