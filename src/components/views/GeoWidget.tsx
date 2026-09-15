@@ -41,7 +41,7 @@ export function GeoWidget() {
         <MapPin size={18} className="text-primary-500" />
         <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">Geographic Distribution</h3>
       </div>
-      <div className="p-5 space-y-4 relative">
+      <div className="p-5 space-y-4 relative max-h-[400px] overflow-y-auto custom-scrollbar">
         {geoStats.map((geo, i) => (
           <div key={geo.cluster} className="relative group cursor-pointer">
             <div className="flex justify-between text-xs mb-1.5">
