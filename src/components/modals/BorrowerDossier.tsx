@@ -186,7 +186,7 @@ export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPa
                   <YAxis yAxisId="right" orientation="right" hide domain={[0, 1]} />
                   
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px' }}
+                    contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fafafa' }}
                     formatter={(value: any, name: any) => {
                       if (name === 'rsi') return [formatNumber(value as number, 2), 'RSI'];
                       return [formatCurrency(value as number), String(name).charAt(0).toUpperCase() + String(name).slice(1)];

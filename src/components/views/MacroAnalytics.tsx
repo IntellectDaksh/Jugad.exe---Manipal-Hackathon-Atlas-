@@ -82,7 +82,7 @@ export function MacroAnalytics() {
                 <YAxis tickFormatter={(val) => `₹${(val/100000).toFixed(1)}L`} tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
                 <Tooltip 
                   cursor={{ fill: 'rgba(0,0,0,0.05)' }}
-                  contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
+                  contentStyle={{ backgroundColor: '#18181b', color: '#fafafa', borderRadius: '8px', border: '1px solid #27272a' }}
                   formatter={(value: any) => formatCurrency(value as number, true)}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
@@ -117,7 +117,7 @@ export function MacroAnalytics() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
+                  contentStyle={{ backgroundColor: '#18181b', color: '#fafafa', borderRadius: '8px', border: '1px solid #27272a' }}
                   formatter={(value: any) => formatCurrency(value as number, true)}
                 />
                 <Legend layout="vertical" verticalAlign="middle" align="right" iconType="circle" wrapperStyle={{ fontSize: '12px', width: '45%' }} />
@@ -139,7 +139,7 @@ export function MacroAnalytics() {
                 <YAxis yAxisId="left" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} domain={[0, 100]} />
                 <YAxis yAxisId="right" orientation="right" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} tickFormatter={(val) => `${val}%`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--tw-colors-ink-900)', color: '#fff', borderRadius: '8px', border: 'none' }}
+                  contentStyle={{ backgroundColor: '#18181b', color: '#fafafa', borderRadius: '8px', border: '1px solid #27272a' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
                 <Line yAxisId="left" type="monotone" dataKey="avgRsi" name="Avg RSI (Risk Score)" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4, fill: '#f59e0b', strokeWidth: 2 }} activeDot={{ r: 6 }} />
