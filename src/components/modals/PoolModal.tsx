@@ -9,8 +9,11 @@ interface PoolModalProps {
 }
 
 export function PoolModal({ open, onClose }: PoolModalProps) {
-  const { addPool } = useStore();
+  const { addPool, borrowers } = useStore();
   const [form, setForm] = useState<{ title: string; jurisdiction: string; mandate: string; capacity: number | '' }>({ title: '', jurisdiction: '', mandate: '', capacity: 500000 });
+
+  const uniqueClusters = Array.from(new Set(borrowers.map(b => b.cluster))).sort();
+  const uniqueCategories = Array.from(new Set(borrowers.map(b => b.tradeCategory))).sort();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -45,11 +48,9 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
           <label className="label-text">Target Cluster (Auto-Assigns Accounts)</label>
           <select value={form.jurisdiction} onChange={e => setForm({ ...form, jurisdiction: e.target.value })} className="input-field" required>
             <option value="">Select a Cluster...</option>
-            <option value="South Mumbai">South Mumbai</option>
-            <option value="Navi Mumbai">Navi Mumbai</option>
-            <option value="Andheri East">Andheri East</option>
-            <option value="Thane">Thane</option>
-            <option value="Dharavi">Dharavi</option>
+            {uniqueClusters.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
             <option value="All Clusters">All Clusters</option>
           </select>
         </div>
@@ -57,10 +58,9 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
           <label className="label-text">Target Category (Optional filter)</label>
           <select value={form.mandate} onChange={e => setForm({ ...form, mandate: e.target.value })} className="input-field">
             <option value="">Any Category</option>
-            <option value="Retail">Retail</option>
-            <option value="Agriculture">Agriculture</option>
-            <option value="Manufacturing">Manufacturing</option>
-            <option value="Services">Services</option>
+            {uniqueCategories.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
           </select>
         </div>
         <div>
