@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useStore } from '@/store';
 import { calculateRSI, willHitStrain, projectSixMonths } from '@/lib/rsi';
 import { formatCurrency, formatNumber } from '@/lib/format';
+import { t } from '@/lib/i18n';
 import { SummaryCard } from '@/components/ui/SummaryCard';
 import { RiskBadge } from '@/components/ui/RiskBadge';
 import { LiveTicker } from '@/components/ui/LiveTicker';
