@@ -23,7 +23,7 @@ import { EditBorrowerModal } from '@/components/modals/EditBorrowerModal';
 import type { ViewKey, Borrower } from '@/types';
 
 function AppContent() {
-  const { borrowers } = useStore();
+  const { borrowers, deleteBorrower } = useStore();
   const [view, setView] = useState<ViewKey>('dashboard');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [underwriteOpen, setUnderwriteOpen] = useState(false);
@@ -179,6 +179,10 @@ function AppContent() {
           onRestructure={handleOpenRestructure}
           onEdit={(b) => setEditId(b.id)}
           onPayment={(b) => setPaymentId(b.id)}
+          onDelete={(b) => {
+            deleteBorrower(b.id);
+            handleCloseDossier();
+          }}
         />
       </ErrorBoundary>
       <RestructureModal

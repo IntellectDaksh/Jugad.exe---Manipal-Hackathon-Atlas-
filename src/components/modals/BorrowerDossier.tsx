@@ -14,6 +14,7 @@ interface BorrowerDossierProps {
   onRestructure: (b: Borrower, planIdx: number) => void;
   onEdit: (b: Borrower) => void;
   onPayment: (b: Borrower) => void;
+  onDelete?: (b: Borrower) => void;
 }
 
 function generate12MonthData(borrower: Borrower, rsiScore: number) {
@@ -54,7 +55,7 @@ function getInitials(name: string) {
   return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
-export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPayment }: BorrowerDossierProps) {
+export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPayment, onDelete }: BorrowerDossierProps) {
   const { pools } = useStore();
 
   const analysis = useMemo(() => {
@@ -106,6 +107,11 @@ export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPa
             <button onClick={() => onPayment(borrower)} className="btn-primary text-xs px-3 py-1.5 hidden sm:flex bg-success-600 hover:bg-success-700 border-success-700 shadow-success-600/20">
               <Banknote size={14} /> Record Payment
             </button>
+            {onDelete && (
+              <button onClick={() => { if(confirm('Delete borrower?')) onDelete(borrower); }} className="btn-danger text-xs px-3 py-1.5 hidden sm:flex bg-danger-600 hover:bg-danger-700 border-danger-700 shadow-danger-600/20 text-white">
+                Delete
+              </button>
+            )}
           </div>
         </header>
 
