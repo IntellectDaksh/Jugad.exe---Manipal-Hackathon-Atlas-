@@ -84,9 +84,9 @@ export function Dashboard({ onSelectBorrower, onViewLedger }: DashboardProps) {
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <SummaryCard
-          label="Total Deployed Exposure"
+          label={t('Total Deployed Exposure')}
           value={formatCurrency(stats.totalExposure, true)}
-          sub={`${borrowers.length} active accounts`}
+          sub={`${borrowers.length} ${t('active accounts')}`}
           icon={<DollarSign size={20} />}
           accent="primary"
           sparklineData={stats.sparks.exposure}

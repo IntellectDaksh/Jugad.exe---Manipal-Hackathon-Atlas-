@@ -1,17 +1,25 @@
+const EXCHANGE_RATES: Record<string, number> = {
+  INR: 1,
+  USD: 0.012, // 1 INR = 0.012 USD
+  GBP: 0.0094, // 1 INR = 0.0094 GBP
+};
+
 export function formatCurrency(n: number, compact = false): string {
   const currency = localStorage.getItem('cashpulse_currency') || 'INR';
+  const rate = EXCHANGE_RATES[currency] || 1;
+  const converted = n * rate;
   
   if (compact) {
     if (currency === 'INR') {
-      if (Math.abs(n) >= 1_000_000_0) return `₹${(n / 1_000_000_0).toFixed(1)}Cr`;
-      if (Math.abs(n) >= 1_000_00) return `₹${(n / 1_000_00).toFixed(1)}L`;
-      if (Math.abs(n) >= 1_000) return `₹${(n / 1_000).toFixed(1)}K`;
+      if (Math.abs(converted) >= 1_000_000_0) return `₹${(converted / 1_000_000_0).toFixed(1)}Cr`;
+      if (Math.abs(converted) >= 1_000_00) return `₹${(converted / 1_000_00).toFixed(1)}L`;
+      if (Math.abs(converted) >= 1_000) return `₹${(converted / 1_000).toFixed(1)}K`;
     } else if (currency === 'USD') {
-      if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-      if (Math.abs(n) >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
+      if (Math.abs(converted) >= 1_000_000) return `$${(converted / 1_000_000).toFixed(1)}M`;
+      if (Math.abs(converted) >= 1_000) return `$${(converted / 1_000).toFixed(1)}K`;
     } else if (currency === 'GBP') {
-      if (Math.abs(n) >= 1_000_000) return `£${(n / 1_000_000).toFixed(1)}M`;
-      if (Math.abs(n) >= 1_000) return `£${(n / 1_000).toFixed(1)}K`;
+      if (Math.abs(converted) >= 1_000_000) return `£${(converted / 1_000_000).toFixed(1)}M`;
+      if (Math.abs(converted) >= 1_000) return `£${(converted / 1_000).toFixed(1)}K`;
     }
   }
 
@@ -21,7 +29,7 @@ export function formatCurrency(n: number, compact = false): string {
     style: 'currency',
     currency: currency,
     maximumFractionDigits: 0,
-  }).format(n);
+  }).format(converted);
 }
 
 export function formatNumber(n: number, decimals = 0): string {
