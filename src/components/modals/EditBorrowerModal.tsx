@@ -12,7 +12,13 @@ interface EditBorrowerModalProps {
 export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps) {
   const { updateBorrower } = useStore();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    borrowerName: string;
+    tradeCategory: string;
+    cluster: string;
+    monthlyIncome: number | '';
+    essentialOutflows: number | '';
+  }>({
     borrowerName: '',
     tradeCategory: '',
     cluster: '',
@@ -40,8 +46,8 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
       borrowerName: formData.borrowerName,
       tradeCategory: formData.tradeCategory,
       cluster: formData.cluster,
-      monthlyIncome: Number(formData.monthlyIncome),
-      essentialOutflows: Number(formData.essentialOutflows)
+      monthlyIncome: Number(formData.monthlyIncome) || 0,
+      essentialOutflows: Number(formData.essentialOutflows) || 0
     });
     onClose();
   };
@@ -103,8 +109,9 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-500 font-medium">₹</span>
               <input 
                 type="number" 
+                min="0"
                 value={formData.monthlyIncome} 
-                onChange={e => setFormData({ ...formData, monthlyIncome: Number(e.target.value) || 0 })} 
+                onChange={e => setFormData({ ...formData, monthlyIncome: e.target.value === '' ? '' : parseInt(e.target.value, 10) })} 
                 className="input-field pl-8" 
                 required 
               />
@@ -115,9 +122,10 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-500 font-medium">₹</span>
               <input 
-                type="number" 
+                type="number"
+                min="0"
                 value={formData.essentialOutflows} 
-                onChange={e => setFormData({ ...formData, essentialOutflows: Number(e.target.value) || 0 })} 
+                onChange={e => setFormData({ ...formData, essentialOutflows: e.target.value === '' ? '' : parseInt(e.target.value, 10) })} 
                 className="input-field pl-8" 
                 required 
               />

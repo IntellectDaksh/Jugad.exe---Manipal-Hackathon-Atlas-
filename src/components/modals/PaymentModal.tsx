@@ -78,8 +78,9 @@ export function PaymentModal({ borrower, onClose }: PaymentModalProps) {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-500 font-medium">₹</span>
             <input 
               type="number" 
+              min="0"
               value={amount} 
-              onChange={e => setAmount(Number(e.target.value) || '')} 
+              onChange={e => setAmount(e.target.value === '' ? '' : parseInt(e.target.value, 10))} 
               className="input-field pl-8" 
               placeholder={borrower.emi.toString()} 
               required 
