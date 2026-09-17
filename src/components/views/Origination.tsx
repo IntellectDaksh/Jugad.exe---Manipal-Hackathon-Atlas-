@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Inbox, CheckCircle2, XCircle, AlertCircle, Clock, ChevronRight, Filter } from 'lucide-react';
 import { useStore } from '@/store';
+import { Modal } from '@/components/ui/Modal';
 import type { OriginationApplication, ApplicationStage } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/format';
 
@@ -20,6 +21,9 @@ const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
 export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
   const { applications, updateApplicationStage } = useStore();
   const [filter, setFilter] = useState('');
+  const [viewDetailsAppId, setViewDetailsAppId] = useState<string | null>(null);
+
+  const viewDetailsApp = applications.find(a => a.id === viewDetailsAppId) || null;
 
   const filteredApps = applications.filter(a => 
     a.businessName.toLowerCase().includes(filter.toLowerCase()) || 
@@ -118,6 +122,7 @@ export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
                           </button>
                         )}
                         <button 
+                          onClick={(e) => { e.stopPropagation(); setViewDetailsAppId(app.id); }}
                           className="ml-auto text-xs font-semibold text-primary-600 dark:text-primary-400 flex items-center gap-1 hover:underline"
                         >
                           View Details <ChevronRight size={14} />
@@ -131,6 +136,88 @@ export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
           );
         })}
       </div>
+
+      {viewDetailsApp && (
+        <Modal
+          open={!!viewDetailsAppId}
+          onClose={() => setViewDetailsAppId(null)}
+          title="Application Details"
+          subtitle={`Application Ref: ${viewDetailsApp.id}`}
+          size="md"
+          footer={
+            <button onClick={() => setViewDetailsAppId(null)} className="btn-secondary w-full sm:w-auto">
+              Close
+            </button>
+          }
+        >
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-ink-50 dark:bg-ink-900/50 p-3 rounded-lg border border-ink-200 dark:border-ink-800">
+                <p className="text-xs text-ink-500 dark:text-ink-400 mb-1">Business Name</p>
+                <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{viewDetailsApp.businessName}</p>
+              </div>
+              <div className="bg-ink-50 dark:bg-ink-900/50 p-3 rounded-lg border border-ink-200 dark:border-ink-800">
+                <p className="text-xs text-ink-500 dark:text-ink-400 mb-1">Applicant Name</p>
+                <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{viewDetailsApp.applicantName}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-ink-50 dark:bg-ink-900/50 p-3 rounded-lg border border-ink-200 dark:border-ink-800">
+                <p className="text-xs text-ink-500 dark:text-ink-400 mb-1">Requested Amount</p>
+                <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{formatCurrency(viewDetailsApp.requestedAmount)}</p>
+              </div>
+              <div className="bg-ink-50 dark:bg-ink-900/50 p-3 rounded-lg border border-ink-200 dark:border-ink-800">
+                <p className="text-xs text-ink-500 dark:text-ink-400 mb-1">Trade Category</p>
+                <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{viewDetailsApp.tradeCategory}</p>
+              </div>
+            </div>
+
+            <div className="bg-ink-50 dark:bg-ink-900/50 p-3 rounded-lg border border-ink-200 dark:border-ink-800">
+              <p className="text-xs text-ink-500 dark:text-ink-400 mb-1">Target Cluster</p>
+              <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{viewDetailsApp.cluster}</p>
+            </div>
+
+            <div className="flex items-center gap-4 py-3 border-t border-b border-ink-100 dark:border-ink-800">
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-ink-900 dark:text-ink-50 mb-1">Phone Data Extracted</p>
+                <p className="text-[11px] text-ink-500 dark:text-ink-400">Mobile money history analyzed for risk scoring.</p>
+              </div>
+              {viewDetailsApp.phoneDataFound ? (
+                <div className="text-success-600 dark:text-success-400"><CheckCircle2 size={20} /></div>
+              ) : (
+                <div className="text-ink-400"><XCircle size={20} /></div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-4 py-3 border-b border-ink-100 dark:border-ink-800">
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-ink-900 dark:text-ink-50 mb-1">SMS Consent Verified</p>
+                <p className="text-[11px] text-ink-500 dark:text-ink-400">Applicant authorized scraping of transaction SMS.</p>
+              </div>
+              {viewDetailsApp.smsConsent ? (
+                <div className="text-success-600 dark:text-success-400"><CheckCircle2 size={20} /></div>
+              ) : (
+                <div className="text-ink-400"><XCircle size={20} /></div>
+              )}
+            </div>
+
+            {viewDetailsApp.aiScore ? (
+              <div className={`p-4 rounded-xl border ${viewDetailsApp.aiScore >= 70 ? 'bg-success-50 dark:bg-success-900/20 border-success-200 dark:border-success-800' : 'bg-warning-50 dark:bg-warning-900/20 border-warning-200 dark:border-warning-800'}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">AI Risk Assessment</p>
+                  <span className={`text-lg font-bold ${viewDetailsApp.aiScore >= 70 ? 'text-success-600 dark:text-success-400' : 'text-warning-600 dark:text-warning-400'}`}>Score: {viewDetailsApp.aiScore}</span>
+                </div>
+                <p className="text-xs text-ink-600 dark:text-ink-400">
+                  {viewDetailsApp.aiScore >= 70 
+                    ? "Application demonstrates strong repayment probability based on digital footprint and proxy cashflows."
+                    : "Application requires manual review due to low digital footprint or inconsistent cashflow signals."}
+                </p>
+              </div>
+            ) : null}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
