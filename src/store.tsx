@@ -17,6 +17,7 @@ interface StoreState {
   deleteBorrower: (id: string) => void;
   restructureBorrower: (id: string, terms: { newEmi: number; newMaturity: string; termMonths: number; interestRate: number; reason: string }) => void;
   addPool: (p: Omit<CreditPool, 'id' | 'createdAt'>) => void;
+  updatePool: (id: string, patch: Partial<CreditPool>) => void;
   deletePool: (id: string) => void;
   addAudit: (action: string, entity: string, entityId: string, detail: string) => void;
   clearAudit: () => void;
@@ -139,6 +140,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addAudit('POOL_CREATE', 'CreditPool', newPool.id, `Created ${newPool.title} - ${newPool.jurisdiction}`);
   }, [addAudit]);
 
+  const updatePool = useCallback((id: string, patch: Partial<CreditPool>) => {
+    setPools(prev => prev.map(p => p.id === id ? { ...p, ...patch } : p));
+    addAudit('UPDATE', 'CreditPool', id, `Updated pool details`);
+  }, [addAudit]);
+
   const deletePool = useCallback((id: string) => {
     setPools(prev => prev.filter(p => p.id !== id));
     setBorrowers(prev => prev.filter(b => b.poolId !== id));
@@ -187,7 +193,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     <StoreContext.Provider value={{
       borrowers, pools, audit, applications, darkMode, toggleDarkMode,
       addBorrower, updateBorrower, deleteBorrower, restructureBorrower,
-      addPool, deletePool, addAudit, clearAudit,
+      addPool, updatePool, deletePool, addAudit, clearAudit,
       updateApplicationStage, recordPayment,
       importData, exportData, resetData,
     }}>

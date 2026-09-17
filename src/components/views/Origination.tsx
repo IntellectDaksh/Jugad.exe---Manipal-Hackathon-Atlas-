@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Inbox, CheckCircle2, XCircle, AlertCircle, Clock, ChevronRight, Filter } from 'lucide-react';
+import { Inbox, CheckCircle2, XCircle, AlertCircle, Clock, ChevronRight, Filter, Building2, Pencil } from 'lucide-react';
 import { useStore } from '@/store';
 import { Modal } from '@/components/ui/Modal';
-import type { OriginationApplication, ApplicationStage } from '@/types';
+import { EditPoolModal } from '@/components/modals/EditPoolModal';
+import type { OriginationApplication, ApplicationStage, CreditPool } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/format';
 
 interface OriginationProps {
   onOpenDossier?: any;
   onUnderwrite?: () => void;
+  onNewPool?: () => void;
 }
 
 const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
@@ -18,12 +20,15 @@ const STAGES: { id: ApplicationStage; label: string; color: string }[] = [
   { id: 'rejected', label: 'Rejected', color: 'border-danger-200 dark:border-danger-900 bg-danger-50 dark:bg-danger-950/30' }
 ];
 
-export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
-  const { applications, updateApplicationStage } = useStore();
+export function Origination({ onOpenDossier, onUnderwrite, onNewPool }: OriginationProps) {
+  const { applications, pools, borrowers, updateApplicationStage } = useStore();
   const [filter, setFilter] = useState('');
+  const [activeTab, setActiveTab] = useState<'applications' | 'pools'>('applications');
   const [viewDetailsAppId, setViewDetailsAppId] = useState<string | null>(null);
+  const [editPoolId, setEditPoolId] = useState<string | null>(null);
 
   const viewDetailsApp = applications.find(a => a.id === viewDetailsAppId) || null;
+  const editPoolObj = pools.find(p => p.id === editPoolId) || null;
 
   const filteredApps = applications.filter(a => 
     a.businessName.toLowerCase().includes(filter.toLowerCase()) || 
@@ -31,33 +36,61 @@ export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
     a.tradeCategory.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const filteredPools = pools.filter(p =>
+    p.title.toLowerCase().includes(filter.toLowerCase()) ||
+    p.jurisdiction.toLowerCase().includes(filter.toLowerCase()) ||
+    p.mandate.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-ink-900 dark:text-ink-50">Origination Hub</h2>
-          <p className="text-sm text-ink-500 dark:text-ink-400">Process and review incoming MSME loan applications.</p>
+          <p className="text-sm text-ink-500 dark:text-ink-400">Process and review incoming MSME loan applications and manage credit pools.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative w-full sm:w-64">
             <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
             <input 
               type="text"
-              placeholder="Filter applicants..."
+              placeholder="Filter..."
               value={filter}
               onChange={e => setFilter(e.target.value)}
               className="input-field pl-9"
             />
           </div>
-          <button onClick={onUnderwrite} className="btn-primary whitespace-nowrap">
-            <Inbox size={16} /> New Application
-          </button>
+          {activeTab === 'applications' ? (
+            <button onClick={onUnderwrite} className="btn-primary whitespace-nowrap">
+              <Inbox size={16} /> New Application
+            </button>
+          ) : (
+            <button onClick={onNewPool} className="btn-primary whitespace-nowrap">
+              <Building2 size={16} /> New Pool
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
-        {STAGES.map(stage => {
-          const stageApps = filteredApps.filter(a => a.stage === stage.id);
+      <div className="flex gap-2 border-b border-ink-200 dark:border-ink-800 pb-px">
+        <button 
+          onClick={() => setActiveTab('applications')}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'applications' ? 'border-primary-500 text-primary-600 dark:text-primary-400' : 'border-transparent text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-300'}`}
+        >
+          Loan Applications
+        </button>
+        <button 
+          onClick={() => setActiveTab('pools')}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'pools' ? 'border-primary-500 text-primary-600 dark:text-primary-400' : 'border-transparent text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-300'}`}
+        >
+          Credit Pools
+        </button>
+      </div>
+
+      {activeTab === 'applications' ? (
+        <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
+          {STAGES.map(stage => {
+            const stageApps = filteredApps.filter(a => a.stage === stage.id);
           
           return (
             <div key={stage.id} className="flex-shrink-0 w-80 flex flex-col gap-3 snap-start">
@@ -136,7 +169,74 @@ export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
             </div>
           );
         })}
-      </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredPools.length === 0 ? (
+            <div className="col-span-full py-12 text-center text-ink-500 dark:text-ink-400">
+              No credit pools found.
+            </div>
+          ) : (
+            filteredPools.map(pool => {
+              const poolBorrowers = borrowers.filter(b => b.poolId === pool.id);
+              const allocated = poolBorrowers.reduce((sum, b) => sum + b.principal, 0);
+              const utilization = pool.capacity > 0 ? (allocated / pool.capacity) * 100 : 0;
+              
+              return (
+                <div key={pool.id} className="card p-5 group hover:border-primary-300 dark:hover:border-primary-700 transition-colors">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                        <Building2 size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-ink-900 dark:text-ink-50">{pool.title}</h3>
+                        <p className="text-xs text-ink-500 dark:text-ink-400">{pool.jurisdiction}</p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setEditPoolId(pool.id)}
+                      className="p-2 text-ink-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <Pencil size={16} />
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-ink-500 dark:text-ink-400">Capacity</span>
+                      <span className="font-semibold text-ink-900 dark:text-ink-50">{formatCurrency(pool.capacity)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-ink-500 dark:text-ink-400">Allocated</span>
+                      <span className="font-semibold text-ink-900 dark:text-ink-50">{formatCurrency(allocated)}</span>
+                    </div>
+                    <div className="space-y-1.5 mt-2 pt-2 border-t border-ink-100 dark:border-ink-800">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-ink-500 dark:text-ink-400">Utilization</span>
+                        <span className="font-medium text-ink-900 dark:text-ink-50">{utilization.toFixed(1)}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-ink-100 dark:bg-ink-800 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-1000 ${utilization > 90 ? 'bg-danger-500' : utilization > 75 ? 'bg-warning-500' : 'bg-primary-500'}`}
+                          style={{ width: `${Math.min(utilization, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {editPoolObj && (
+        <EditPoolModal 
+          pool={editPoolObj} 
+          onClose={() => setEditPoolId(null)} 
+        />
+      )}
 
       {viewDetailsApp && (
         <Modal
