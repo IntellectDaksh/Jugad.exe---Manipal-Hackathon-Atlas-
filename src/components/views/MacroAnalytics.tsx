@@ -80,10 +80,10 @@ export function MacroAnalytics() {
           </h3>
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={clusterData} margin={{ top: 10, right: 10, left: 20, bottom: 80 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-ink-200 dark:text-ink-800" />
-                <XAxis dataKey="cluster" tick={{ fill: 'currentColor', fontSize: 11 }} angle={-45} textAnchor="end" height={60} className="text-ink-500" axisLine={false} tickLine={false} interval={0} />
-                <YAxis tickFormatter={(val) => `₹${(val/100000).toFixed(1)}L`} tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
+              <BarChart data={clusterData} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="currentColor" className="text-ink-200 dark:text-ink-800" />
+                <XAxis type="number" tickFormatter={(val) => `₹${(val/100000).toFixed(1)}L`} tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="cluster" width={140} tick={{ fill: 'currentColor', fontSize: 11 }} className="text-ink-500" axisLine={false} tickLine={false} interval={0} />
                 <Tooltip 
                   cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                   contentStyle={{ backgroundColor: '#18181b', color: '#fafafa', borderRadius: '8px', border: '1px solid #27272a' }}
