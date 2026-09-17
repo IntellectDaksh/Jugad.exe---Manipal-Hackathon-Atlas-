@@ -5,7 +5,7 @@ import { calculateRSI } from '@/lib/rsi';
 import { PieChart as PieChartIcon, TrendingUp, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/format';
 
-const COLORS = ['#0ea5e9', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'];
+const COLORS = ['#0ea5e9', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#14b8a6', '#64748b'];
 
 export function MacroAnalytics() {
   const { borrowers, pools } = useStore();
@@ -24,7 +24,11 @@ export function MacroAnalytics() {
       else entry.critical += b.principal;
     });
 
-    return Array.from(map.values()).sort((a, b) => (b.performing + b.watchlist + b.critical) - (a.performing + a.watchlist + a.critical));
+    return Array.from(map.values()).sort((a, b) => {
+      if (b.critical !== a.critical) return b.critical - a.critical;
+      if (b.watchlist !== a.watchlist) return b.watchlist - a.watchlist;
+      return b.performing - a.performing;
+    });
   }, [borrowers]);
 
   const categoryData = useMemo(() => {
@@ -48,7 +52,7 @@ export function MacroAnalytics() {
   const trendData = useMemo(() => {
     const data = [];
     const now = new Date();
-    for (let i = 6; i >= 0; i--) {
+    for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       data.push({
         month: d.toLocaleString('default', { month: 'short' }),
@@ -78,7 +82,7 @@ export function MacroAnalytics() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={clusterData} margin={{ top: 10, right: 10, left: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-ink-200 dark:text-ink-800" />
-                <XAxis dataKey="cluster" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
+                <XAxis dataKey="cluster" tick={{ fill: 'currentColor', fontSize: 11 }} angle={-45} textAnchor="end" height={60} className="text-ink-500" axisLine={false} tickLine={false} interval={0} />
                 <YAxis tickFormatter={(val) => `₹${(val/100000).toFixed(1)}L`} tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
                 <Tooltip 
                   cursor={{ fill: 'rgba(0,0,0,0.05)' }}
@@ -113,6 +117,8 @@ export function MacroAnalytics() {
                   paddingAngle={5}
                   dataKey="value"
                   stroke="none"
+                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                  labelLine={false}
                 >
                   {categoryData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -140,8 +146,8 @@ export function MacroAnalytics() {
               <LineChart data={trendData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-ink-200 dark:text-ink-800" />
                 <XAxis dataKey="month" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
-                <YAxis yAxisId="left" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} domain={[0, 100]} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} tickFormatter={(val) => `${val}%`} />
+                <YAxis yAxisId="left" tick={{ fill: '#f59e0b', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} domain={[0, 100]} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fill: '#ef4444', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} tickFormatter={(val) => `${val}%`} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#18181b', color: '#fafafa', borderRadius: '8px', border: '1px solid #27272a' }}
                   itemStyle={{ color: '#fafafa' }}
