@@ -71,7 +71,8 @@ export function UnderwriteModal({ open, onClose }: UnderwriteModalProps) {
     onClose();
   };
 
-  const isStep1Valid = form.borrowerName && form.tradeCategory && form.cluster;
+  const isNameValid = form.borrowerName.trim().length > 0 && /[a-zA-Z]/.test(form.borrowerName);
+  const isStep1Valid = isNameValid && form.tradeCategory && form.cluster;
   const isStep2Valid = form.principal && form.emi && form.maturityMonths;
   const isStep3Valid = form.monthlyIncome && form.essentialOutflows && form.liquidReserves;
 
@@ -136,6 +137,7 @@ export function UnderwriteModal({ open, onClose }: UnderwriteModalProps) {
           <div>
             <label className="label-text">Legal / Business Name</label>
             <input value={form.borrowerName} onChange={e => setForm({ ...form, borrowerName: e.target.value })} className="input-field" placeholder="e.g. Amani Trading Co." required />
+            {form.borrowerName && !isNameValid && <p className="text-xs text-danger-500 mt-1">Name must contain letters.</p>}
           </div>
           <div>
             <label className="label-text">Trade Category</label>

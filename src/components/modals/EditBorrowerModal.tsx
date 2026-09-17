@@ -40,6 +40,8 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
 
   if (!borrower) return null;
 
+  const isNameValid = formData.borrowerName.trim().length > 0 && /[a-zA-Z]/.test(formData.borrowerName);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     updateBorrower(borrower.id, {
@@ -63,7 +65,7 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
       footer={
         <>
           <button onClick={onClose} className="btn-secondary">Cancel</button>
-          <button onClick={handleSubmit} className="btn-primary">Save Changes</button>
+          <button onClick={handleSubmit} className="btn-primary" disabled={!isNameValid}>Save Changes</button>
         </>
       }
     >
@@ -77,6 +79,7 @@ export function EditBorrowerModal({ borrower, onClose }: EditBorrowerModalProps)
             className="input-field" 
             required 
           />
+          {formData.borrowerName && !isNameValid && <p className="text-xs text-danger-500 mt-1">Name must contain letters.</p>}
         </div>
         
         <div className="grid grid-cols-2 gap-4">
