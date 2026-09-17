@@ -5,6 +5,7 @@ import { useStore } from '@/store';
 import { calculateRSI } from '@/lib/rsi';
 import { formatCurrency, formatDate } from '@/lib/format';
 import { RiskBadge, StatusBadge } from '@/components/ui/RiskBadge';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 import type { Borrower, RiskTier } from '@/types';
 
 interface LedgerProps {
@@ -158,40 +159,41 @@ export function Ledger({ onSelectBorrower, onAddPayment }: LedgerProps) {
               className="input-field pl-10"
             />
           </div>
-          <div className="flex gap-3">
-            <div className="relative">
-              <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400 pointer-events-none" />
-              <select
+          <div className="flex flex-wrap gap-3">
+            <div className="w-40">
+              <CustomSelect
                 value={tierFilter}
-                onChange={e => setTierFilter(e.target.value as RiskTier | 'all')}
-                className="input-field pl-9 pr-8 appearance-none cursor-pointer"
-              >
-                <option value="all">All Tiers</option>
-                <option value="Performing">Performing</option>
-                <option value="Watchlist">Watchlist</option>
-                <option value="Critical">Critical</option>
-              </select>
+                onChange={val => setTierFilter(val as RiskTier | 'all')}
+                options={[
+                  { value: 'all', label: 'All Tiers' },
+                  { value: 'Performing', label: 'Performing' },
+                  { value: 'Watchlist', label: 'Watchlist' },
+                  { value: 'Critical', label: 'Critical' }
+                ]}
+              />
             </div>
-            <select
-              value={poolFilter}
-              onChange={e => setPoolFilter(e.target.value)}
-              className="input-field pr-8 appearance-none cursor-pointer"
-            >
-              <option value="all">All Pools</option>
-              {pools.map(p => (
-                <option key={p.id} value={p.id}>{p.title}</option>
-              ))}
-            </select>
-            <select
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              className="input-field pr-8 appearance-none cursor-pointer"
-            >
-              <option value="all">All Statuses</option>
-              <option value="active">Active</option>
-              <option value="restructured">Restructured</option>
-              <option value="default">Default</option>
-            </select>
+            <div className="w-48">
+              <CustomSelect
+                value={poolFilter}
+                onChange={val => setPoolFilter(val)}
+                options={[
+                  { value: 'all', label: 'All Pools' },
+                  ...pools.map(p => ({ value: p.id, label: p.title }))
+                ]}
+              />
+            </div>
+            <div className="w-40">
+              <CustomSelect
+                value={statusFilter}
+                onChange={val => setStatusFilter(val)}
+                options={[
+                  { value: 'all', label: 'All Statuses' },
+                  { value: 'active', label: 'Active' },
+                  { value: 'restructured', label: 'Restructured' },
+                  { value: 'default', label: 'Default' }
+                ]}
+              />
+            </div>
             
             <button onClick={exportCSV} className="btn-secondary whitespace-nowrap flex items-center gap-2">
               <Download size={16} /> <span className="hidden sm:inline">Export {selectedIds.size > 0 ? `Selected (${selectedIds.size})` : 'All'}</span>
