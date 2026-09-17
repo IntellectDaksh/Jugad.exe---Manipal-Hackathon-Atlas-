@@ -10,7 +10,7 @@ interface PoolModalProps {
 
 export function PoolModal({ open, onClose }: PoolModalProps) {
   const { addPool, borrowers } = useStore();
-  const [form, setForm] = useState<{ title: string; jurisdiction: string; mandate: string; capacity: number | '' }>({ title: '', jurisdiction: '', mandate: '', capacity: 500000 });
+  const [form, setForm] = useState<{ title: string; jurisdiction: string; mandate: string; capacity: string }>({ title: '', jurisdiction: '', mandate: '', capacity: '500000' });
 
   const uniqueClusters = Array.from(new Set(borrowers.map(b => b.cluster))).sort();
   const uniqueCategories = Array.from(new Set(borrowers.map(b => b.tradeCategory))).sort();
@@ -18,7 +18,7 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     addPool({ ...form, capacity: Number(form.capacity) || 0 });
-    setForm({ title: '', jurisdiction: '', mandate: '', capacity: 500000 });
+    setForm({ title: '', jurisdiction: '', mandate: '', capacity: '500000' });
     onClose();
   };
 
@@ -66,10 +66,12 @@ export function PoolModal({ open, onClose }: PoolModalProps) {
         <div>
           <label className="label-text">Capital Limit / Capacity (₹)</label>
           <input 
-            type="number" 
-            min="0" 
+            type="text" 
             value={form.capacity} 
-            onChange={e => setForm({ ...form, capacity: e.target.value === '' ? '' : parseInt(e.target.value, 10) })} 
+            onChange={e => {
+              const val = e.target.value.replace(/[^0-9]/g, '');
+              setForm({ ...form, capacity: val });
+            }} 
             className="input-field" 
             required 
           />
