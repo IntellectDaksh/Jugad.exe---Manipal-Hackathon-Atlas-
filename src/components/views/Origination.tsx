@@ -3,6 +3,7 @@ import { Inbox, CheckCircle2, XCircle, AlertCircle, Clock, ChevronRight, Filter,
 import { useStore } from '@/store';
 import { Modal } from '@/components/ui/Modal';
 import { EditPoolModal } from '@/components/modals/EditPoolModal';
+import { ApplicationModal } from '@/components/modals/ApplicationModal';
 import type { OriginationApplication, ApplicationStage, CreditPool } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/format';
 
@@ -26,6 +27,7 @@ export function Origination({ onOpenDossier, onUnderwrite, onNewPool }: Originat
   const [activeTab, setActiveTab] = useState<'applications' | 'pools'>('applications');
   const [viewDetailsAppId, setViewDetailsAppId] = useState<string | null>(null);
   const [editPoolId, setEditPoolId] = useState<string | null>(null);
+  const [applicationModalOpen, setApplicationModalOpen] = useState(false);
 
   const viewDetailsApp = applications.find(a => a.id === viewDetailsAppId) || null;
   const editPoolObj = pools.find(p => p.id === editPoolId) || null;
@@ -61,7 +63,7 @@ export function Origination({ onOpenDossier, onUnderwrite, onNewPool }: Originat
             />
           </div>
           {activeTab === 'applications' ? (
-            <button onClick={onUnderwrite} className="btn-primary whitespace-nowrap">
+            <button onClick={() => setApplicationModalOpen(true)} className="btn-primary whitespace-nowrap">
               <Inbox size={16} /> New Application
             </button>
           ) : (
@@ -237,6 +239,11 @@ export function Origination({ onOpenDossier, onUnderwrite, onNewPool }: Originat
           onClose={() => setEditPoolId(null)} 
         />
       )}
+
+      <ApplicationModal 
+        open={applicationModalOpen} 
+        onClose={() => setApplicationModalOpen(false)} 
+      />
 
       {viewDetailsApp && (
         <Modal

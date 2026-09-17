@@ -21,6 +21,7 @@ interface StoreState {
   deletePool: (id: string) => void;
   addAudit: (action: string, entity: string, entityId: string, detail: string) => void;
   clearAudit: () => void;
+  addApplication: (app: Omit<OriginationApplication, 'id' | 'submittedAt' | 'stage' | 'aiScore' | 'phoneDataFound' | 'smsConsent'>) => void;
   updateApplicationStage: (id: string, stage: ApplicationStage) => void;
   recordPayment: (id: string, amount: number, method: string) => void;
   importData: (data: { borrowers: Borrower[]; pools: CreditPool[]; audit: AuditEntry[] }) => void;
@@ -153,6 +154,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearAudit = useCallback(() => setAudit([]), []);
 
+  const addApplication = useCallback((app: Omit<OriginationApplication, 'id' | 'submittedAt' | 'stage' | 'aiScore' | 'phoneDataFound' | 'smsConsent'>) => {
+    const newApp: OriginationApplication = {
+      ...app,
+      id: generateId('app'),
+      submittedAt: new Date().toISOString(),
+      stage: 'pending_data',
+      aiScore: Math.floor(Math.random() * 40) + 40, // Mock AI score
+      phoneDataFound: Math.random() > 0.2,
+      smsConsent: true
+    };
+    setApplications(prev => [newApp, ...prev]);
+    addAudit('APP_CREATE', 'Application', newApp.id, `Created application for ${newApp.businessName}`);
+  }, [addAudit]);
+
   const updateApplicationStage = useCallback((id: string, stage: ApplicationStage) => {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, stage } : a));
     addAudit('STAGE_UPDATE', 'Application', id, `Moved application to ${stage.replace('_', ' ')}`);
@@ -194,7 +209,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       borrowers, pools, audit, applications, darkMode, toggleDarkMode,
       addBorrower, updateBorrower, deleteBorrower, restructureBorrower,
       addPool, updatePool, deletePool, addAudit, clearAudit,
-      updateApplicationStage, recordPayment,
+      addApplication, updateApplicationStage, recordPayment,
       importData, exportData, resetData,
     }}>
       {children}
