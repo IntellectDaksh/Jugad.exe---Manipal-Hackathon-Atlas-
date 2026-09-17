@@ -264,11 +264,20 @@ export function StressSandbox() {
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fontSize: 12, fill: '#71717a' }} 
-                    tickFormatter={(val) => `₹${(val/1000).toFixed(0)}k`}
+                    tickFormatter={(val) => val >= 1000 ? `₹${(val/1000).toFixed(1).replace('.0', '')}k` : `₹${val}`}
                     dx={-10}
                   />
                   
-                  <YAxis yAxisId="right" orientation="right" hide domain={[0, 1]} />
+                  <YAxis 
+                    yAxisId="right" 
+                    orientation="right" 
+                    domain={[0, 1]}
+                    tickFormatter={(val) => val.toFixed(2)}
+                    tick={{ fontSize: 12, fill: '#f59e0b' }}
+                    axisLine={false}
+                    tickLine={false}
+                    dx={10}
+                  />
                   
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fafafa' }}
@@ -314,7 +323,11 @@ export function StressSandbox() {
                 <h3 className="text-xs font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wide">AI Suggestion</h3>
               </div>
               <p className="text-sm text-ink-900 dark:text-ink-100 font-medium leading-relaxed">
-                Enable moratorium + extend tenure to reduce stress
+                {moratorium && tenureDelta >= 3 
+                  ? "Optimal structure achieved. Default risk minimized."
+                  : !moratorium 
+                    ? "Enable moratorium + extend tenure to reduce stress"
+                    : "Extend tenure further for maximum safety buffer"}
               </p>
             </div>
           </div>

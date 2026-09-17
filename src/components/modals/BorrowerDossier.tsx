@@ -178,12 +178,21 @@ export function BorrowerDossier({ borrower, onClose, onRestructure, onEdit, onPa
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fontSize: 12, fill: '#71717a' }} 
-                    tickFormatter={(val) => `₹${(val/1000).toFixed(0)}k`}
+                    tickFormatter={(val) => val >= 1000 ? `₹${(val/1000).toFixed(1).replace('.0', '')}k` : `₹${val}`}
                     dx={-10}
                   />
                   
-                  {/* Right Y-Axis for RSI (hidden but scales the orange line) */}
-                  <YAxis yAxisId="right" orientation="right" hide domain={[0, 1]} />
+                  {/* Right Y-Axis for RSI */}
+                  <YAxis 
+                    yAxisId="right" 
+                    orientation="right" 
+                    domain={[0, 1]}
+                    tickFormatter={(val) => val.toFixed(2)}
+                    tick={{ fontSize: 12, fill: '#f59e0b' }}
+                    axisLine={false}
+                    tickLine={false}
+                    dx={10}
+                  />
                   
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', color: '#fafafa' }}
