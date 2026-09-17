@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { ShieldCheck, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 import { useStore } from '@/store';
 import { defaultSeasonalProfile } from '@/lib/rsi';
 import type { CashFlowCadence } from '@/types';
@@ -148,10 +149,12 @@ export function UnderwriteModal({ open, onClose }: UnderwriteModalProps) {
             <input value={form.cluster} onChange={e => setForm({ ...form, cluster: e.target.value })} className="input-field" placeholder="e.g. Mombasa" required />
           </div>
           <div>
-            <label className="label-text">Credit Pool</label>
-            <select value={form.poolId} onChange={e => setForm({ ...form, poolId: e.target.value })} className="input-field cursor-pointer">
-              {pools.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
-            </select>
+            <CustomSelect 
+              label="Credit Pool"
+              value={form.poolId} 
+              onChange={val => setForm({ ...form, poolId: val })} 
+              options={pools.map(p => ({ value: p.id, label: p.title }))}
+            />
           </div>
           </div>
         )}
