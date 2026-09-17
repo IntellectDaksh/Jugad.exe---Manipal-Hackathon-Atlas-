@@ -64,5 +64,7 @@ export function formatRelativeTime(iso: string): string {
 }
 
 export function generateId(prefix = 'id'): string {
-  return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  const r1 = Math.random().toString(36).substring(2, 10);
+  const r2 = Math.random().toString(36).substring(2, 6);
+  return `${prefix}_${r1}_${r2}`;
 }
