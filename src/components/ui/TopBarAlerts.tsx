@@ -4,7 +4,7 @@ import { useStore } from '@/store';
 import { calculateRSI, willHitStrain } from '@/lib/rsi';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function TopBarAlerts() {
+export function TopBarAlerts({ onSelectBorrower }: { onSelectBorrower: (b: any) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const { borrowers } = useStore();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -57,14 +57,21 @@ export function TopBarAlerts() {
               ) : (
                 <div className="divide-y divide-ink-100 dark:divide-ink-800">
                   {alerts.map(({ borrower, rsi }) => (
-                    <div key={borrower.id} className="px-4 py-3 hover:bg-ink-50 dark:hover:bg-ink-800/30 transition-colors cursor-pointer">
+                    <div 
+                      key={borrower.id} 
+                      onClick={() => {
+                        onSelectBorrower(borrower);
+                        setIsOpen(false);
+                      }}
+                      className="px-4 py-3 hover:bg-ink-50 dark:hover:bg-ink-800/30 transition-colors cursor-pointer"
+                    >
                       <div className="flex items-start gap-3">
                         <div className="mt-0.5">
                           {rsi.score >= 65 ? <AlertOctagon size={16} className="text-danger-500" /> : <AlertTriangle size={16} className="text-warning-500" />}
                         </div>
                         <div>
                           <p className="text-sm font-medium text-ink-900 dark:text-ink-100">
-                            {borrower.borrowerName} <span className="text-ink-500 font-normal">may default soon</span>
+                            {borrower.borrowerName || 'Unknown Borrower'} <span className="text-ink-500 font-normal">may default soon</span>
                           </p>
                           <p className="text-xs text-ink-500 dark:text-ink-400 mt-0.5">
                             Projected RSI spike to {rsi.score}. Recommend structural intervention.

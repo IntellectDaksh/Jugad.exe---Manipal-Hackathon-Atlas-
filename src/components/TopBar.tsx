@@ -9,6 +9,7 @@ interface TopBarProps {
   onUnderwrite: () => void;
   onNewPool: () => void;
   onSearchClick: () => void;
+  onSelectBorrower: (b: any) => void;
 }
 
 const viewTitles: Record<ViewKey, { title: string; subtitle: string }> = {
@@ -23,7 +24,7 @@ const viewTitles: Record<ViewKey, { title: string; subtitle: string }> = {
   compliance: { title: 'Compliance & Reports', subtitle: 'Basel-III reporting and system audit' },
 };
 
-export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool, onSearchClick }: TopBarProps) {
+export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool, onSearchClick, onSelectBorrower }: TopBarProps) {
   const { darkMode, toggleDarkMode } = useStore();
   const info = viewTitles[view];
 
@@ -59,7 +60,7 @@ export function TopBar({ view, onMenuClick, onUnderwrite, onNewPool, onSearchCli
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </button>
 
-          <TopBarAlerts />
+          <TopBarAlerts onSelectBorrower={onSelectBorrower} />
           
           <button onClick={toggleDarkMode} className="p-2 rounded-lg text-ink-500 dark:text-ink-400 hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
