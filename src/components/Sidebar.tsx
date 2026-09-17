@@ -2,7 +2,7 @@ import { LayoutDashboard, TableProperties, FlaskConical, CalendarDays, ScrollTex
 import type { ViewKey } from '@/types';
 import { useStore } from '@/store';
 import { t } from '@/lib/i18n';
-# Veer was here and so was anvir along with black dicks and daksh and uideas
+// Veer was here and so was anvir along with black dicks and daksh and uideas
 
 interface SidebarProps {
   view: ViewKey;
