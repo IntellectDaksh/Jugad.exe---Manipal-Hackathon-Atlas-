@@ -5,7 +5,7 @@ import { calculateRSI } from '@/lib/rsi';
 import { PieChart as PieChartIcon, TrendingUp, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/format';
 
-const COLORS = ['#0ea5e9', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#14b8a6', '#64748b'];
+const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#64748b', '#eab308'];
 
 export function MacroAnalytics() {
   const { borrowers, pools } = useStore();
@@ -78,9 +78,9 @@ export function MacroAnalytics() {
           <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50 mb-6 flex items-center gap-2">
             <ShieldAlert size={16} className="text-primary-500" /> Capital at Risk by Cluster (₹)
           </h3>
-          <div className="h-80">
+          <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={clusterData} margin={{ top: 10, right: 10, left: 20, bottom: 20 }}>
+              <BarChart data={clusterData} margin={{ top: 10, right: 10, left: 20, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-ink-200 dark:text-ink-800" />
                 <XAxis dataKey="cluster" tick={{ fill: 'currentColor', fontSize: 11 }} angle={-45} textAnchor="end" height={60} className="text-ink-500" axisLine={false} tickLine={false} interval={0} />
                 <YAxis tickFormatter={(val) => `₹${(val/100000).toFixed(1)}L`} tick={{ fill: 'currentColor', fontSize: 12 }} className="text-ink-500" axisLine={false} tickLine={false} />
@@ -117,8 +117,6 @@ export function MacroAnalytics() {
                   paddingAngle={5}
                   dataKey="value"
                   stroke="none"
-                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
                 >
                   {categoryData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -130,7 +128,19 @@ export function MacroAnalytics() {
                   labelStyle={{ color: '#e4e4e7', marginBottom: '4px' }}
                   formatter={(value: any) => formatCurrency(value as number, true)}
                 />
-                <Legend layout="vertical" verticalAlign="middle" align="right" iconType="circle" wrapperStyle={{ fontSize: '12px', width: '45%' }} />
+                <Legend 
+                  layout="vertical" 
+                  verticalAlign="middle" 
+                  align="right" 
+                  iconType="circle" 
+                  wrapperStyle={{ fontSize: '12px', width: '50%' }} 
+                  formatter={(value) => {
+                    const item = categoryData.find(d => d.name === value);
+                    const total = categoryData.reduce((a, b) => a + b.value, 0);
+                    const percent = item ? ((item.value / total) * 100).toFixed(0) : 0;
+                    return <span className="text-ink-700 dark:text-ink-300 font-medium ml-1">{value} <span className="text-ink-400 dark:text-ink-500 ml-1">{percent}%</span></span>;
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
