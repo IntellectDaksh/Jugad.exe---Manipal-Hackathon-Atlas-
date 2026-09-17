@@ -27,7 +27,8 @@ export function Origination({ onOpenDossier, onUnderwrite }: OriginationProps) {
 
   const filteredApps = applications.filter(a => 
     a.businessName.toLowerCase().includes(filter.toLowerCase()) || 
-    a.cluster.toLowerCase().includes(filter.toLowerCase())
+    a.cluster.toLowerCase().includes(filter.toLowerCase()) ||
+    a.tradeCategory.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
