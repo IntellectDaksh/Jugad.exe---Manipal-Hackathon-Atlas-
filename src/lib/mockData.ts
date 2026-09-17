@@ -68,18 +68,18 @@ function makeBorrower(
 }
 
 const borrowers: Borrower[] = [
-  makeBorrower('Amani Trading Co.', 'Import/Export', 'Mombasa', 'pool_001', 45000, 1250, 36, 5200, 2800, 'seasonal', 18000, 'Active', 'Strong repayment history, seasonal revenue concentration in Q2/Q3.'),
-  makeBorrower('Bahari Fisheries', 'Fishing & Seafood', 'Mombasa', 'pool_001', 28000, 820, 36, 3400, 1900, 'seasonal', 9500, 'Watch', 'Monsoon season impact on catch volume flagged in last review.'),
-  makeBorrower('Sahara Textiles Ltd.', 'Textile Manufacturing', 'Malindi', 'pool_001', 62000, 1800, 42, 6800, 4200, 'stable', 24000, 'Active', 'Diversified buyer base, stable contract pipeline.'),
-  makeBorrower('Highland Coffee Coop', 'Agriculture - Coffee', 'Yirgacheffe', 'pool_002', 35000, 980, 36, 2800, 1600, 'seasonal', 7200, 'Watch', 'Global coffee price volatility affecting margins.'),
-  makeBorrower('Tena Grain Collective', 'Agriculture - Grains', 'Bahir Dar', 'pool_002', 18000, 520, 36, 1900, 1200, 'seasonal', 4800, 'Active', 'Good harvest season, reserves building well.'),
-  makeBorrower('Adama Livestock', 'Agriculture - Livestock', 'Adama', 'pool_002', 22000, 640, 36, 2100, 1450, 'irregular', 3100, 'Watch', 'Drought impact on pasture, irregular income, reserves depleting.'),
-  makeBorrower('Nairobi Bakers United', 'Food Processing', 'Nairobi', 'pool_003', 15000, 450, 24, 2600, 1400, 'stable', 12000, 'Active', 'Stable demand, long-term supply contracts in place.'),
-  makeBorrower('Kibera Crafts Hub', 'Handicrafts & Artisan', 'Nairobi', 'pool_003', 8000, 240, 36, 1200, 700, 'irregular', 2200, 'Watch', 'Tourism recovery slow, irregular order flow.'),
-  makeBorrower('Eastleigh Retail Group', 'Retail Trade', 'Nairobi', 'pool_003', 52000, 1550, 36, 6200, 3800, 'stable', 28000, 'Active', 'Multiple retail outlets, strong cash flow.'),
-  makeBorrower('Mavoko Construction Co.', 'Construction Services', 'Machakos', 'pool_003', 38000, 1100, 36, 3400, 2400, 'declining', 6500, 'Watch', 'Infrastructure project delays, declining contract pipeline.'),
-  makeBorrower('Rift Valley Logistics', 'Transport & Logistics', 'Nakuru', 'pool_003', 41000, 1200, 36, 3800, 2200, 'recovering', 8500, 'Watch', 'Recovering from fuel price shock, new contracts incoming.'),
-  makeBorrower('Lamu Boat Builders', 'Boat Building & Repair', 'Lamu', 'pool_001', 12000, 360, 36, 1800, 1100, 'seasonal', 4200, 'Active', 'Niche market, strong local demand.'),
+  makeBorrower('Amani Trading Co.', 'Import/Export', 'Mombasa', 'pool_001', 45000, 1560, 36, 5200, 2800, 'seasonal', 18000, 'Active', 'Strong repayment history, seasonal revenue concentration in Q2/Q3.'),
+  makeBorrower('Bahari Fisheries', 'Fishing & Seafood', 'Mombasa', 'pool_001', 28000, 970, 36, 3400, 1900, 'seasonal', 9500, 'Watch', 'Monsoon season impact on catch volume flagged in last review.'),
+  makeBorrower('Sahara Textiles Ltd.', 'Textile Manufacturing', 'Malindi', 'pool_001', 62000, 1850, 42, 6800, 4200, 'stable', 24000, 'Active', 'Diversified buyer base, stable contract pipeline.'),
+  makeBorrower('Highland Coffee Coop', 'Agriculture - Coffee', 'Yirgacheffe', 'pool_002', 35000, 1210, 36, 2800, 1600, 'seasonal', 7200, 'Watch', 'Global coffee price volatility affecting margins.'),
+  makeBorrower('Tena Grain Collective', 'Agriculture - Grains', 'Bahir Dar', 'pool_002', 18000, 620, 36, 1900, 1200, 'seasonal', 4800, 'Active', 'Good harvest season, reserves building well.'),
+  makeBorrower('Adama Livestock', 'Agriculture - Livestock', 'Adama', 'pool_002', 22000, 760, 36, 2100, 1450, 'irregular', 3100, 'Watch', 'Drought impact on pasture, irregular income, reserves depleting.'),
+  makeBorrower('Nairobi Bakers United', 'Food Processing', 'Nairobi', 'pool_003', 15000, 780, 24, 2600, 1400, 'stable', 12000, 'Active', 'Stable demand, long-term supply contracts in place.'),
+  makeBorrower('Kibera Crafts Hub', 'Handicrafts & Artisan', 'Nairobi', 'pool_003', 8000, 270, 36, 1200, 700, 'irregular', 2200, 'Watch', 'Tourism recovery slow, irregular order flow.'),
+  makeBorrower('Eastleigh Retail Group', 'Retail Trade', 'Nairobi', 'pool_003', 52000, 1550, 42, 6200, 3800, 'stable', 28000, 'Active', 'Multiple retail outlets, strong cash flow.'),
+  makeBorrower('Mavoko Construction Co.', 'Construction Services', 'Machakos', 'pool_003', 38000, 1310, 36, 3400, 2400, 'declining', 6500, 'Watch', 'Infrastructure project delays, declining contract pipeline.'),
+  makeBorrower('Rift Valley Logistics', 'Transport & Logistics', 'Nakuru', 'pool_003', 41000, 1420, 36, 3800, 2200, 'recovering', 8500, 'Watch', 'Recovering from fuel price shock, new contracts incoming.'),
+  makeBorrower('Lamu Boat Builders', 'Boat Building & Repair', 'Lamu', 'pool_001', 12000, 410, 36, 1800, 1100, 'seasonal', 4200, 'Active', 'Niche market, strong local demand.'),
 ];
 
 const auditLog: AuditEntry[] = [
@@ -140,12 +140,12 @@ pools.push({
   capacity: 350000,
   createdAt: '2026-09-12T08:00:00.000Z',
 });
-borrowers.push(makeBorrower('Lakshmi', 'Seasonal Vegetable Vendor', 'Mysuru Central Mandi, Karnataka', 'mysuru-demo', 48000, 4760, 11, 18400, 11700, 'seasonal', 2223, 'Watch', 'Income dips during monsoon vegetable supply shortages; surges ahead of festive season.'));
-borrowers.push(makeBorrower('Raju', 'Smallholder Sugarcane Farmer', 'Mandya District, Karnataka', 'mysuru-demo', 62000, 5980, 8, 22300, 16100, 'seasonal', 1288, 'Watch', 'Major cash harvest realized in Oct-Nov. Pre-harvest inputs cause temporary acute cash pinch.'));
-borrowers.push(makeBorrower('Arun', 'Urban Delivery & Gig Courier', 'Bengaluru South, Karnataka', 'mysuru-demo', 35000, 3420, 10, 16200, 10800, 'irregular', 1512, 'Watch', 'Variable weekly incentives. Monthly lump-sum EMI creates timing mismatch.'));
-borrowers.push(makeBorrower('Meena', 'Neighbourhood Kirana Store Owner', 'Hassan Town, Karnataka', 'mysuru-demo', 54000, 5210, 13, 29400, 17600, 'stable', 5984, 'Active', 'Consistent daily footfall. Robust working capital buffer and excellent payment hygiene.'));
-borrowers.push(makeBorrower('Suresh', 'Independent Carpenter & Joiner', 'Tumakuru Outer Ring, Karnataka', 'mysuru-demo', 41000, 4050, 7, 13800, 12100, 'declining', 605, 'Watch', 'Sustained order slowdown from local real estate halts. Requires structured term relief.'));
-borrowers.push(makeBorrower('Fatima', 'Custom Apparel Tailor & Embroidery', 'Shivajinagar, Bengaluru, Karnataka', 'mysuru-demo', 29000, 2860, 9, 17100, 10900, 'recovering', 2398, 'Watch', 'Recovered following purchase of sewing machine motor; orders steadily increasing.'));
+borrowers.push(makeBorrower('Lakshmi', 'Seasonal Vegetable Vendor', 'Mysuru Central Mandi, Karnataka', 'mysuru-demo', 48000, 1660, 36, 18400, 11700, 'seasonal', 2223, 'Watch', 'Income dips during monsoon vegetable supply shortages; surges ahead of festive season.'));
+borrowers.push(makeBorrower('Raju', 'Smallholder Sugarcane Farmer', 'Mandya District, Karnataka', 'mysuru-demo', 62000, 2150, 36, 22300, 16100, 'seasonal', 1288, 'Watch', 'Major cash harvest realized in Oct-Nov. Pre-harvest inputs cause temporary acute cash pinch.'));
+borrowers.push(makeBorrower('Arun', 'Urban Delivery & Gig Courier', 'Bengaluru South, Karnataka', 'mysuru-demo', 35000, 1210, 36, 16200, 10800, 'irregular', 1512, 'Watch', 'Variable weekly incentives. Monthly lump-sum EMI creates timing mismatch.'));
+borrowers.push(makeBorrower('Meena', 'Neighbourhood Kirana Store Owner', 'Hassan Town, Karnataka', 'mysuru-demo', 54000, 1870, 36, 29400, 17600, 'stable', 5984, 'Active', 'Consistent daily footfall. Robust working capital buffer and excellent payment hygiene.'));
+borrowers.push(makeBorrower('Suresh', 'Independent Carpenter & Joiner', 'Tumakuru Outer Ring, Karnataka', 'mysuru-demo', 41000, 1420, 36, 13800, 12100, 'declining', 605, 'Watch', 'Sustained order slowdown from local real estate halts. Requires structured term relief.'));
+borrowers.push(makeBorrower('Fatima', 'Custom Apparel Tailor & Embroidery', 'Shivajinagar, Bengaluru, Karnataka', 'mysuru-demo', 29000, 1000, 36, 17100, 10900, 'recovering', 2398, 'Watch', 'Recovered following purchase of sewing machine motor; orders steadily increasing.'));
 pools.push({
   id: 'dharwad-agri',
   title: 'Dharwad Agri & Dairy Cluster',
@@ -154,7 +154,7 @@ pools.push({
   capacity: 120000,
   createdAt: '2026-09-13T09:30:00.000Z',
 });
-borrowers.push(makeBorrower('Basavaraj Patil', 'Dairy Cooperative Producer', 'Dharwad Rural, Karnataka', 'dharwad-agri', 50000, 4850, 12, 21500, 13200, 'stable', 3696, 'Active', 'Regular payments via local dairy society direct deposit.'));
-borrowers.push(makeBorrower('Gangamma', 'Chilli & Groundnut Cultivator', 'Hubballi Outskirts, Karnataka', 'dharwad-agri', 38000, 3750, 6, 15800, 11500, 'seasonal', 1265, 'Watch', 'Weeding and fertilizer peak costs coincide with lean monsoon income.'));
+borrowers.push(makeBorrower('Basavaraj Patil', 'Dairy Cooperative Producer', 'Dharwad Rural, Karnataka', 'dharwad-agri', 50000, 1730, 36, 21500, 13200, 'stable', 3696, 'Active', 'Regular payments via local dairy society direct deposit.'));
+borrowers.push(makeBorrower('Gangamma', 'Chilli & Groundnut Cultivator', 'Hubballi Outskirts, Karnataka', 'dharwad-agri', 38000, 1310, 36, 15800, 11500, 'seasonal', 1265, 'Watch', 'Weeding and fertilizer peak costs coincide with lean monsoon income.'));
 
 export { pools, borrowers, auditLog };
